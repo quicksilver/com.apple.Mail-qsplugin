@@ -355,7 +355,7 @@
 	NSError *err = nil;
 	NSString *fileContents = [NSString stringWithContentsOfFile:[object objectForMeta:@"mailPath"] encoding:NSASCIIStringEncoding error:&err];
 	if (!fileContents || err) {
-		NSLog(@"Couldn't read mail. Error: %@ (%i - %@)", [err localizedDescription], [err code], [object objectForMeta:@"mailPath"]);
+		NSLog(@"Couldn't read mail. Error: %@ (%ld - %@)", [err localizedDescription], [err code], [object objectForMeta:@"mailPath"]);
 		return nil;
 	}
 
