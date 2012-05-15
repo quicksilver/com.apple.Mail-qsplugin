@@ -14,10 +14,10 @@
 	<string>Apple Mail Module</string>
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
-	<key>CFBundleVersion</key>
-	<string>118</string>
 	<key>CFBundleShortVersionString</key>
 	<string>2.6.0</string>
+	<key>CFBundleVersion</key>
+	<string>11C</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2006, Blacktree, Inc.</string>
 	<key>QSActions</key>
@@ -101,9 +101,9 @@
 		<key>extendedDescription</key>
 		<string>&lt;h3&gt;Apple Mail.app Plugin&lt;/h3&gt;
 
-&lt;p&gt;This plugin lets you browse your mailboxes and mails contained in &lt;a href=&quot;http://www.apple.com/macosx/features/mail/&quot;&gt;Apple Mail.app&lt;/a&gt; and provides some appropriate actions.&lt;/p&gt;
+&lt;p&gt;This plugin lets you browse your mailboxes and mails contained in &lt;a href="http://www.apple.com/macosx/features/mail/"&gt;Apple Mail.app&lt;/a&gt; and provides some appropriate actions.&lt;/p&gt;
 
-&lt;p&gt;Just call up &lt;em&gt;Mail.app&lt;/em&gt; in the first pane and &quot;arrow into&quot; it. It will reveal all mailboxes/mail folders for each mail account. Arrowing into a mailbox reveals all mails in that folder and arrowing into a mail shows the body text of a mail as well as the mail address associated with it.&lt;/p&gt;
+&lt;p&gt;Just call up &lt;em&gt;Mail.app&lt;/em&gt; in the first pane and "arrow into" it. It will reveal all mailboxes/mail folders for each mail account. Arrowing into a mailbox reveals all mails in that folder and arrowing into a mail shows the body text of a mail as well as the mail address associated with it.&lt;/p&gt;
 
 &lt;p&gt;The plugin provides the following actions:
 	&lt;ul&gt;

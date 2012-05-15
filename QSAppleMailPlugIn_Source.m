@@ -155,6 +155,9 @@
 
 	NSString *path = [MAILPATH stringByStandardizingPath];
 	NSFileManager *fm = [NSFileManager defaultManager];
+	if ([NSApplication isLion]) {
+		path = [path stringByAppendingPathComponent:@"V2"];
+	}
 	NSDirectoryEnumerator *accountEnum = [fm enumeratorAtPath:path];
 	NSDirectoryEnumerator *mailboxEnum;
 
