@@ -162,7 +162,9 @@
 	NSDirectoryEnumerator *mailboxEnum;
 
 	// find real names for accounts
-	NSArray *pl = (NSArray *)CFPreferencesCopyAppValue(CFSTR("MailAccounts"), CFSTR("com.apple.mail"));
+	NSUserDefaults *mailPrefs = [[NSUserDefaults alloc] init];
+	NSArray *pl = [[mailPrefs persistentDomainForName:@"com.apple.mail"] objectForKey:@"MailAccounts"];
+	[mailPrefs release];
 	NSMutableDictionary *realAccountNames = [NSMutableDictionary dictionaryWithCapacity:[pl count]];
 	for(NSDictionary *dict in pl) {
 		if ([dict objectForKey:@"AccountPath"] != nil && [dict objectForKey:@"AccountName"] != nil) {
