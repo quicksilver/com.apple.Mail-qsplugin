@@ -7,12 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2EB95BFE134F33C30011C28B /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB95BF9134F33C30011C28B /* FMDatabase.m */; };
-		2EB95BFF134F33C30011C28B /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB95BFB134F33C30011C28B /* FMDatabaseAdditions.m */; };
-		2EB95C00134F33C30011C28B /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EB95BFD134F33C30011C28B /* FMResultSet.m */; };
-		2EB95C03134F34490011C28B /* FMDatabase.h in Resources */ = {isa = PBXBuildFile; fileRef = 2EB95BF8134F33C30011C28B /* FMDatabase.h */; };
-		2EB95C04134F34490011C28B /* FMDatabaseAdditions.h in Resources */ = {isa = PBXBuildFile; fileRef = 2EB95BFA134F33C30011C28B /* FMDatabaseAdditions.h */; };
-		2EB95C05134F34490011C28B /* FMResultSet.h in Resources */ = {isa = PBXBuildFile; fileRef = 2EB95BFC134F33C30011C28B /* FMResultSet.h */; };
 		2EB95CB7134F35C10011C28B /* MailCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EB95CB6134F35C10011C28B /* MailCore.framework */; };
 		2EB95D7D134F38650011C28B /* MailCore.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 2EB95CB6134F35C10011C28B /* MailCore.framework */; };
 		2EB95DA3134F3D460011C28B /* Mail.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 2EB95DA2134F3D2B0011C28B /* Mail.scpt */; };
@@ -53,12 +47,6 @@
 		14A8D20B10CE5956003857E3 /* QSPlugIn_Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = QSPlugIn_Release.xcconfig; sourceTree = "<group>"; };
 		14A8D20C10CE5956003857E3 /* QSPlugIn.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = QSPlugIn.xcconfig; sourceTree = "<group>"; };
 		14A8D20D10CE5956003857E3 /* Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
-		2EB95BF8134F33C30011C28B /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
-		2EB95BF9134F33C30011C28B /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabase.m; sourceTree = "<group>"; };
-		2EB95BFA134F33C30011C28B /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseAdditions.h; sourceTree = "<group>"; };
-		2EB95BFB134F33C30011C28B /* FMDatabaseAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseAdditions.m; sourceTree = "<group>"; };
-		2EB95BFC134F33C30011C28B /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMResultSet.h; sourceTree = "<group>"; };
-		2EB95BFD134F33C30011C28B /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
 		2EB95CB6134F35C10011C28B /* MailCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MailCore.framework; sourceTree = "<group>"; };
 		2EB95DA2134F3D2B0011C28B /* Mail.scpt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.scpt; path = Mail.scpt; sourceTree = "<group>"; };
 		2EBE6C051350F99C00C71301 /* Drafts.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Drafts.icns; sourceTree = "<group>"; };
@@ -134,23 +122,9 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		2EB95BF7134F33C30011C28B /* FMDB */ = {
-			isa = PBXGroup;
-			children = (
-				2EB95BF8134F33C30011C28B /* FMDatabase.h */,
-				2EB95BF9134F33C30011C28B /* FMDatabase.m */,
-				2EB95BFA134F33C30011C28B /* FMDatabaseAdditions.h */,
-				2EB95BFB134F33C30011C28B /* FMDatabaseAdditions.m */,
-				2EB95BFC134F33C30011C28B /* FMResultSet.h */,
-				2EB95BFD134F33C30011C28B /* FMResultSet.m */,
-			);
-			name = FMDB;
-			sourceTree = "<group>";
-		};
 		32DBCF9E0370C38000C91783 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				2EB95BF7134F33C30011C28B /* FMDB */,
 				7F3D846B07D76BAE00A1B6A7 /* QSMailMediator.h */,
 				E1C9DC1707099B11001BB625 /* QSAppleMailMediator.h */,
 				E1C9DC1807099B11001BB625 /* QSAppleMailMediator.m */,
@@ -229,9 +203,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EB95C03134F34490011C28B /* FMDatabase.h in Resources */,
-				2EB95C04134F34490011C28B /* FMDatabaseAdditions.h in Resources */,
-				2EB95C05134F34490011C28B /* FMResultSet.h in Resources */,
 				E1C9DC1907099B11001BB625 /* QSAppleMailMediator.h in Resources */,
 				E1C9DC1F07099B19001BB625 /* QSAppleMailPlugIn_Source.h in Resources */,
 				E1C9DCEE0709A6FB001BB625 /* QSAppleMailPlugIn_Action.h in Resources */,
@@ -286,9 +257,6 @@
 				E1C9DC1A07099B11001BB625 /* QSAppleMailMediator.m in Sources */,
 				E1C9DC2007099B19001BB625 /* QSAppleMailPlugIn_Source.m in Sources */,
 				E1C9DCEF0709A6FB001BB625 /* QSAppleMailPlugIn_Action.m in Sources */,
-				2EB95BFE134F33C30011C28B /* FMDatabase.m in Sources */,
-				2EB95BFF134F33C30011C28B /* FMDatabaseAdditions.m in Sources */,
-				2EB95C00134F33C30011C28B /* FMResultSet.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -6,8 +6,6 @@
 //  Copyright __MyCompanyName__ 2004. All rights reserved.
 //
 
-#import "FMDatabase.h"
-#import "FMResultSet.h"
 #import <MailCore/MailCore.h>
 
 #define kQSAppleMailMailboxType @"qs.mail.mailbox"
