@@ -231,6 +231,8 @@
 		</dict>
 		<key>QSObjectHandlers</key>
 		<dict>
+			<key>QSUnreadMailParent</key>
+			<string>QSUnreadMailSource</string>
 			<key>qs.mail.mailbox</key>
 			<string>QSAppleMailPlugIn_Source</string>
 			<key>qs.mail.message</key>

@@ -41,6 +41,8 @@
 {
 	if ([Mail isRunning]) {
 		QSObject *unreadMailParent = [QSObject objectWithName:@"Unread Messages"];
+		[unreadMailParent setIdentifier:@"QSUnreadMailParent"];
+		[unreadMailParent setPrimaryType:@"QSUnreadMailParent"];
 		return [NSArray arrayWithObject:unreadMailParent];
 	}
 	return nil;
@@ -53,7 +55,30 @@
 
 - (BOOL)loadChildrenForObject:(QSObject *)object
 {
-	return NO;
+	MailMailbox *inbox = [Mail inbox];
+	if ([inbox unreadCount] == 0) {
+		return NO;
+	}
+	QSObject *child;
+	NSMutableArray *qsmessages = [NSMutableArray arrayWithCapacity:[inbox unreadCount]];
+	NSPredicate *unread = [NSPredicate predicateWithFormat:@"readStatus == 0"];
+	NSArray *messages = [[[inbox messages] get] filteredArrayUsingPredicate:unread];
+	for (MailMessage *msg in messages) {
+		child = [QSObject objectWithName:[msg subject]];
+		[child setDetails:[msg sender]];
+		[child setObject:msg forType:@"qs.mail.message"];
+		[child setPrimaryType:@"qs.mail.message"];
+		[qsmessages addObject:child];
+	}
+	[object setChildren:qsmessages];
+	return YES;
+}
+
+- (void)setQuickIconForObject:(QSObject *)object
+{
+	if ([[object primaryType] isEqualToString:@"QSUnreadMailParent"]) {
+		[object setIcon:[QSResourceManager imageNamed:@"com.apple.mail"]];
+	}
 }
 
 @end
