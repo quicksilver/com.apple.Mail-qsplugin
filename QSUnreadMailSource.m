@@ -50,7 +50,7 @@
 
 - (BOOL)objectHasChildren:(QSObject *)object
 {
-	return YES;
+	return ([[Mail inbox] unreadCount] > 0);
 }
 
 - (BOOL)loadChildrenForObject:(QSObject *)object
