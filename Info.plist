@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
+	<key>CFBundleDisplayName</key>
+	<string>Apple Mail</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -12,8 +14,6 @@
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>Apple Mail Module</string>
-	<key>CFBundleDisplayName</key>
-	<string>Apple Mail</string>
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>
@@ -124,6 +124,19 @@
 			<string>com.apple.Mail</string>
 		</array>
 	</dict>
+	<key>QSPresetAdditions</key>
+	<array>
+		<dict>
+			<key>ID</key>
+			<string>QSPresetUnreadMail</string>
+			<key>icon</key>
+			<string>com.apple.mail</string>
+			<key>name</key>
+			<string>Unread Messages</string>
+			<key>source</key>
+			<string>QSUnreadMailSource</string>
+		</dict>
+	</array>
 	<key>QSRegistration</key>
 	<dict>
 		<key>QSActionProviders</key>
@@ -222,6 +235,11 @@
 			<string>QSAppleMailPlugIn_Source</string>
 			<key>qs.mail.message</key>
 			<string>QSAppleMailPlugIn_Source</string>
+		</dict>
+		<key>QSObjectSources</key>
+		<dict>
+			<key>QSUnreadMailSource</key>
+			<string>QSUnreadMailSource</string>
 		</dict>
 	</dict>
 	<key>QSRequirements</key>
