@@ -16,6 +16,8 @@
 		2EBE6C0F1350F9B400C71301 /* Sent.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2EBE6C0E1350F9B400C71301 /* Sent.icns */; };
 		7F3D846C07D76BAE00A1B6A7 /* QSMailMediator.h in Resources */ = {isa = PBXBuildFile; fileRef = 7F3D846B07D76BAE00A1B6A7 /* QSMailMediator.h */; };
 		8D1AC9700486D14A00FE50C9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD92D38A0106425D02CA0E72 /* Cocoa.framework */; };
+		D409AC2C15656B4C00D4D364 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D409AC2915656B2800D4D364 /* ScriptingBridge.framework */; };
+		D409AC2D15656B6F00D4D364 /* Mail.app in Sources */ = {isa = PBXBuildFile; fileRef = D453F01B15656A39008B9911 /* Mail.app */; };
 		E1C9DC1907099B11001BB625 /* QSAppleMailMediator.h in Resources */ = {isa = PBXBuildFile; fileRef = E1C9DC1707099B11001BB625 /* QSAppleMailMediator.h */; };
 		E1C9DC1A07099B11001BB625 /* QSAppleMailMediator.m in Sources */ = {isa = PBXBuildFile; fileRef = E1C9DC1807099B11001BB625 /* QSAppleMailMediator.m */; };
 		E1C9DC1F07099B19001BB625 /* QSAppleMailPlugIn_Source.h in Resources */ = {isa = PBXBuildFile; fileRef = E1C9DC1D07099B19001BB625 /* QSAppleMailPlugIn_Source.h */; };
@@ -24,6 +26,20 @@
 		E1C9DCEE0709A6FB001BB625 /* QSAppleMailPlugIn_Action.h in Resources */ = {isa = PBXBuildFile; fileRef = E1C9DCEC0709A6FB001BB625 /* QSAppleMailPlugIn_Action.h */; };
 		E1C9DCEF0709A6FB001BB625 /* QSAppleMailPlugIn_Action.m in Sources */ = {isa = PBXBuildFile; fileRef = E1C9DCED0709A6FB001BB625 /* QSAppleMailPlugIn_Action.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXBuildRule section */
+		D409AC2E15656B8000D4D364 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.app";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h",
+			);
+			script = "sdef \"$INPUT_FILE_PATH\" | sdp -fh -o \"$DERIVED_FILES_DIR\" --basename \"$INPUT_FILE_BASE\" --bundleid `defaults read \"$INPUT_FILE_PATH/Contents/Info\" CFBundleIdentifier`";
+		};
+/* End PBXBuildRule section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		2EB95D82134F386C0011C28B /* Copy Frameworks */ = {
@@ -56,6 +72,8 @@
 		7F3D846B07D76BAE00A1B6A7 /* QSMailMediator.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = QSMailMediator.h; path = ../elements.support.mail/QSMailMediator.h; sourceTree = SOURCE_ROOT; };
 		8D1AC9730486D14A00FE50C9 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D1AC9740486D14A00FE50C9 /* Apple Mail Module.qsplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Apple Mail Module.qsplugin"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D409AC2915656B2800D4D364 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
+		D453F01B15656A39008B9911 /* Mail.app */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Mail.app; path = /Applications/Mail.app; sourceTree = "<absolute>"; };
 		DD92D38A0106425D02CA0E72 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		E1C9DC1707099B11001BB625 /* QSAppleMailMediator.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = QSAppleMailMediator.h; sourceTree = "<group>"; };
 		E1C9DC1807099B11001BB625 /* QSAppleMailMediator.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = QSAppleMailMediator.m; sourceTree = "<group>"; };
@@ -73,6 +91,7 @@
 			files = (
 				8D1AC9700486D14A00FE50C9 /* Cocoa.framework in Frameworks */,
 				2EB95CB7134F35C10011C28B /* MailCore.framework in Frameworks */,
+				D409AC2C15656B4C00D4D364 /* ScriptingBridge.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,6 +113,7 @@
 		0259C582FE90428111CA0C5A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D453F01B15656A39008B9911 /* Mail.app */,
 				E1C9DC2307099B27001BB625 /* Scripts */,
 				2EBE6C051350F99C00C71301 /* Drafts.icns */,
 				2EBE6C061350F99C00C71301 /* Junk.icns */,
@@ -116,8 +136,9 @@
 		2E58F364FFB232C311CA0CBA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				2EB95CB6134F35C10011C28B /* MailCore.framework */,
 				DD92D38A0106425D02CA0E72 /* Cocoa.framework */,
+				D409AC2915656B2800D4D364 /* ScriptingBridge.framework */,
+				2EB95CB6134F35C10011C28B /* MailCore.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -165,6 +186,7 @@
 				E1022B2806B3475D00299BEC /* ShellScript */,
 			);
 			buildRules = (
+				D409AC2E15656B8000D4D364 /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
@@ -254,6 +276,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D409AC2D15656B6F00D4D364 /* Mail.app in Sources */,
 				E1C9DC1A07099B11001BB625 /* QSAppleMailMediator.m in Sources */,
 				E1C9DC2007099B19001BB625 /* QSAppleMailPlugIn_Source.m in Sources */,
 				E1C9DCEF0709A6FB001BB625 /* QSAppleMailPlugIn_Action.m in Sources */,
