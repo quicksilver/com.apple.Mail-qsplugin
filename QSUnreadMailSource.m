@@ -10,6 +10,21 @@
 
 @implementation QSUnreadMailSource
 
+- (id)init
+{
+	self = [super init];
+	if (self) {
+		Mail = [[SBApplication applicationWithBundleIdentifier:@"com.apple.mail"] retain];
+	}
+	return self;
+}
+
+- (void)dealloc
+{
+	[Mail release];
+	[super dealloc];
+}
+
 - (BOOL)indexIsValidFromDate:(NSDate *)indexDate forEntry:(NSDictionary *)theEntry
 {
 	// rescan only if the indexDate is prior to the last launch
@@ -24,7 +39,6 @@
 
 - (NSArray *)objectsForEntry:(NSDictionary *)theEntry
 {
-	MailApplication *Mail = [SBApplication applicationWithBundleIdentifier:@"com.apple.mail"];
 	if ([Mail isRunning]) {
 		QSObject *unreadMailParent = [QSObject objectWithName:@"Unread Messages"];
 		return [NSArray arrayWithObject:unreadMailParent];

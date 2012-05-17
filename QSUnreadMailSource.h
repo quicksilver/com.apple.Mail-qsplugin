@@ -6,7 +6,10 @@
 //
 
 #import <QSCore/QSCore.h>
+@class MailApplication;
 
 @interface QSUnreadMailSource : QSObjectSource
-
+{
+	MailApplication *Mail;
+}
 @end
