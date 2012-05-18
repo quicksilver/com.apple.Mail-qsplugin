@@ -287,7 +287,6 @@
 			[newObject setDetails:sender];
 			[newObject setParentID:[object identifier]];
 			[newObject setIdentifier:[NSString stringWithFormat:@"message:%d", [message valueForAttribute:(NSString *)kMDItemFSName]]];
-			[newObject setObject:mailPath forMeta:@"mailPath"];
 			[newObject setObject:accountID forMeta:@"accountId"];
 			[newObject setObject:[message valueForAttribute:(NSString *)kMDItemFSName] forMeta:@"message_id"];
 			[newObject setObject:mailboxName forMeta:@"mailboxName"];
@@ -308,9 +307,9 @@
 
 	// read mail file
 	NSError *err = nil;
-	NSString *fileContents = [NSString stringWithContentsOfFile:[object objectForMeta:@"mailPath"] encoding:NSASCIIStringEncoding error:&err];
+	NSString *fileContents = [NSString stringWithContentsOfFile:[object objectForType:QSFilePathType] encoding:NSASCIIStringEncoding error:&err];
 	if (!fileContents || err) {
-		NSLog(@"Couldn't read mail. Error: %@ (%ld - %@)", [err localizedDescription], [err code], [object objectForMeta:@"mailPath"]);
+		NSLog(@"Couldn't read mail. Error: %@ (%ld - %@)", [err localizedDescription], [err code], [object objectForType:QSFilePathType]);
 		return nil;
 	}
 
