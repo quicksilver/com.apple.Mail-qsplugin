@@ -66,6 +66,9 @@
 	NSMutableArray *qsmessages = [NSMutableArray arrayWithCapacity:[inbox unreadCount]];
 	NSPredicate *unread = [NSPredicate predicateWithFormat:@"readStatus == 0"];
 	NSArray *messages = [[[inbox messages] get] filteredArrayUsingPredicate:unread];
+	NSString *accountPath, *searchFilter;
+	NSMetadataQuery *query = [[NSMetadataQuery alloc] init];
+	NSArray *messagePaths;
 	for (MailMessage *msg in messages) {
 		child = [QSObject objectWithName:[msg subject]];
 		[child setIdentifier:[msg messageId]];
@@ -74,6 +77,12 @@
 		[child setObject:msg forType:@"qs.mail.message"];
 		[child setPrimaryType:@"qs.mail.message"];
 		[child setObject:[[msg mailbox] name] forMeta:@"mailboxName"];
+		accountPath = [[[[msg mailbox] account] accountDirectory] path];
+		searchFilter = [NSString stringWithFormat:@"kMDItemSubject == '%@'", [msg subject]];
+		messagePaths = [query resultsForSearchString:searchFilter inFolders:[NSSet setWithObject:accountPath]];
+		if ([messagePaths count]) {
+			[child setObject:[[messagePaths objectAtIndex:0] valueForAttribute:NSMetadataItemPathKey] forType:QSFilePathType];
+		}
 		[qsmessages addObject:child];
 	}
 	[object setChildren:qsmessages];
