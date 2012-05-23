@@ -68,9 +68,12 @@
 	NSArray *messages = [[[inbox messages] get] filteredArrayUsingPredicate:unread];
 	for (MailMessage *msg in messages) {
 		child = [QSObject objectWithName:[msg subject]];
+		[child setIdentifier:[msg messageId]];
 		[child setDetails:[msg sender]];
+		[child setParentID:[object identifier]];
 		[child setObject:msg forType:@"qs.mail.message"];
 		[child setPrimaryType:@"qs.mail.message"];
+		[child setObject:[[msg mailbox] name] forMeta:@"mailboxName"];
 		[qsmessages addObject:child];
 	}
 	[object setChildren:qsmessages];
