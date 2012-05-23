@@ -50,7 +50,10 @@
 
 - (BOOL)objectHasChildren:(QSObject *)object
 {
-	return ([[Mail inbox] unreadCount] > 0);
+	if ([Mail isRunning]) {
+		return ([[Mail inbox] unreadCount] > 0);
+	}
+	return NO;
 }
 
 - (BOOL)loadChildrenForObject:(QSObject *)object
