@@ -296,6 +296,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 14A8D20B10CE5956003857E3 /* QSPlugIn_Release.xcconfig */;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					/System/Library/PrivateFrameworks,
+					"$(BUILT_PRODUCTS_DIR)",
+					"$(SRCROOT)",
+				);
 				PRODUCT_NAME = "Apple Mail Module";
 			};
 			name = Release;
@@ -318,6 +323,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 14A8D20910CE5956003857E3 /* QSPlugIn_Debug.xcconfig */;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					/System/Library/PrivateFrameworks,
+					"$(BUILT_PRODUCTS_DIR)",
+					"$(SRCROOT)",
+				);
 				PRODUCT_NAME = "Apple Mail Module";
 			};
 			name = Debug;
