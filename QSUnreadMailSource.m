@@ -81,7 +81,7 @@
 		searchFilter = [NSString stringWithFormat:@"kMDItemSubject == '%@'", [msg subject]];
 		messagePaths = [query resultsForSearchString:searchFilter inFolders:[NSSet setWithObject:accountPath]];
 		if ([messagePaths count]) {
-			[child setObject:[[messagePaths objectAtIndex:0] valueForAttribute:NSMetadataItemPathKey] forType:QSFilePathType];
+			[child setObject:[[messagePaths objectAtIndex:0] valueForAttribute:@"kMDItemPath"] forType:QSFilePathType];
 		}
 		[qsmessages addObject:child];
 	}

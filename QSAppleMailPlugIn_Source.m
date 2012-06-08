@@ -282,7 +282,7 @@
 		for (NSMetadataItem *message in [messageQuery results]) {
 			subject = [message valueForAttribute:(NSString *)kMDItemSubject];
 			sender = [[message valueForAttribute:(NSString *)kMDItemAuthors] lastObject];
-			mailPath = [message valueForAttribute:NSMetadataItemPathKey];
+			mailPath = [message valueForAttribute:@"kMDItemPath"];
 			newObject=[QSObject objectWithName:subject];
 			[newObject setDetails:sender];
 			[newObject setParentID:[object identifier]];
