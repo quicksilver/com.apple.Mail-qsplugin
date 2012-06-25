@@ -173,8 +173,9 @@
 				14A8D20C10CE5956003857E3 /* QSPlugIn.xcconfig */,
 				14A8D20D10CE5956003857E3 /* Release.xcconfig */,
 			);
-			path = Configuration;
-			sourceTree = QS_SOURCE_ROOT;
+			name = Configuration;
+			path = /private/tmp/QS/Configuration;
+			sourceTree = "<absolute>";
 		};
 /* End PBXGroup section */
 
@@ -294,7 +295,7 @@
 /* Begin XCBuildConfiguration section */
 		7F07AF28085E432A00E2AFC4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 14A8D20B10CE5956003857E3 /* QSPlugIn_Release.xcconfig */;
+			baseConfigurationReference = 14A8D20C10CE5956003857E3 /* QSPlugIn.xcconfig */;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					/System/Library/PrivateFrameworks,
@@ -321,7 +322,7 @@
 		};
 		7FE2FB390C55A2E0009CCF17 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 14A8D20910CE5956003857E3 /* QSPlugIn_Debug.xcconfig */;
+			baseConfigurationReference = 14A8D20C10CE5956003857E3 /* QSPlugIn.xcconfig */;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					/System/Library/PrivateFrameworks,
