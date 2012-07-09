@@ -302,7 +302,7 @@
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(SRCROOT)",
 				);
-				PRODUCT_NAME = "Apple Mail Module";
+				PRODUCT_NAME = "Apple Mail Plugin";
 			};
 			name = Release;
 		};
@@ -329,7 +329,7 @@
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(SRCROOT)",
 				);
-				PRODUCT_NAME = "Apple Mail Module";
+				PRODUCT_NAME = "Apple Mail Plugin";
 			};
 			name = Debug;
 		};
