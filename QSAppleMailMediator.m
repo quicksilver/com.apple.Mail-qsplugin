@@ -1,4 +1,3 @@
-
 #import "QSAppleMailMediator.h"
 #import "QSMailMediator.h"
 @class QSCountBadgeImage;
@@ -95,6 +94,16 @@
 	[countImage drawBadgeForIconRect:rect];				
 	
 	return YES;	
+}
+
+- (NSDictionary *)smtpServerDetails
+{
+	NSUserDefaults *mailPrefs = [[NSUserDefaults alloc] init];
+	NSArray *smtpList = [[mailPrefs persistentDomainForName:@"com.apple.mail"] objectForKey:@"DeliveryAccounts"];
+	if ([smtpList count]) {
+		return [smtpList objectAtIndex:0];
+	}
+	return nil;
 }
 
 @end
