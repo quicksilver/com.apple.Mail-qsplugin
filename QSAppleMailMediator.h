@@ -1,7 +1,6 @@
+#import "QSMailMediator.h"
 
-#import <Foundation/Foundation.h>
-
-@interface QSAppleMailMediator : NSObject {
+@interface QSAppleMailMediator : NSObject<QSMailMediator> {
     NSAppleScript *mailScript;
 }
 - (NSAppleScript *)mailScript;
