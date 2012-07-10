@@ -286,7 +286,7 @@
 			newObject=[QSObject objectWithName:subject];
 			[newObject setDetails:sender];
 			[newObject setParentID:[object identifier]];
-			[newObject setIdentifier:[NSString stringWithFormat:@"message:%d", [message valueForAttribute:(NSString *)kMDItemFSName]]];
+			[newObject setIdentifier:[NSString stringWithFormat:@"message:%@", [message valueForAttribute:(NSString *)kMDItemFSName]]];
 			[newObject setObject:accountID forMeta:@"accountId"];
 			[newObject setObject:[message valueForAttribute:(NSString *)kMDItemFSName] forMeta:@"message_id"];
 			[newObject setObject:mailboxName forMeta:@"mailboxName"];

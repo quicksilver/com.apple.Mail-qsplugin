@@ -34,7 +34,7 @@
 
 - (QSObject *)revealMessage:(QSObject *)dObject{
 	NSAppleEventDescriptor *arguments = [NSAppleEventDescriptor listDescriptor];
-	[arguments insertDescriptor:[NSAppleEventDescriptor descriptorWithInt32:[[dObject objectForMeta:@"message_id"] intValue]] atIndex:0];
+	[arguments insertDescriptor:[NSAppleEventDescriptor descriptorWithInt32:[[dObject objectForMeta:@"message_id"] integerValue]] atIndex:0];
 	[arguments insertDescriptor:[NSAppleEventDescriptor descriptorWithString:[dObject objectForMeta:@"mailboxName"]] atIndex:0];
 	[arguments insertDescriptor:[NSAppleEventDescriptor descriptorWithString:[self makeAccountPath:dObject]] atIndex:0];
 
@@ -50,7 +50,7 @@
 
 - (QSBasicObject *)deleteMessage:(QSObject *)dObject{
 	NSAppleEventDescriptor *arguments = [NSAppleEventDescriptor listDescriptor];
-	[arguments insertDescriptor:[NSAppleEventDescriptor descriptorWithInt32:[[dObject objectForMeta:@"message_id"] intValue]] atIndex:0];
+	[arguments insertDescriptor:[NSAppleEventDescriptor descriptorWithInt32:[[dObject objectForMeta:@"message_id"] integerValue]] atIndex:0];
 	[arguments insertDescriptor:[NSAppleEventDescriptor descriptorWithString:[dObject objectForMeta:@"mailboxName"]] atIndex:0];
 	[arguments insertDescriptor:[NSAppleEventDescriptor descriptorWithString:[self makeAccountPath:dObject]] atIndex:0];
 
@@ -66,7 +66,7 @@
 
 - (QSObject *)moveMessage:(QSObject *)dObject toMailbox:(QSObject *)iObject{
 	NSAppleEventDescriptor *arguments = [NSAppleEventDescriptor listDescriptor];
-	[arguments insertDescriptor:[NSAppleEventDescriptor descriptorWithInt32:[[dObject objectForMeta:@"message_id"] intValue]] atIndex:0];
+	[arguments insertDescriptor:[NSAppleEventDescriptor descriptorWithInt32:[[dObject objectForMeta:@"message_id"] integerValue]] atIndex:0];
 	[arguments insertDescriptor:[NSAppleEventDescriptor descriptorWithString:[dObject objectForMeta:@"mailboxName"]] atIndex:0];
 	[arguments insertDescriptor:[NSAppleEventDescriptor descriptorWithString:[self makeAccountPath:dObject]] atIndex:0];
 	[arguments insertDescriptor:[NSAppleEventDescriptor descriptorWithString:[iObject objectForMeta:@"mailboxName"]] atIndex:0];

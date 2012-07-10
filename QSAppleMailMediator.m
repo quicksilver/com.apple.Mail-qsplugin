@@ -10,8 +10,8 @@
 													  arguments:[NSArray arrayWithObjects:subject,body,addresses,pathArray,nil]
 														  error:nil]objectValue];
 		//NSLog(@"accounts %@",accounts);
-        int i; 
-        int accountIndex=0;
+        NSInteger i; 
+        NSInteger accountIndex=0;
         for (i=0;i<[accounts count];i++){
             if (emailsShareDomain([addresses lastObject],[[accounts objectAtIndex:i]objectAtIndex:0])){
                 accountIndex=i;   
@@ -79,7 +79,7 @@
 - (BOOL)drawIconForObject:(QSObject *)object inRect:(NSRect)rect flipped:(BOOL)flipped{
 	if (![object objectForType:QSProcessType]){ return NO; }
 	
-	int count=[[[self mailScript] executeSubroutine:@"unread_count"
+	NSInteger count=[[[self mailScript] executeSubroutine:@"unread_count"
 																   arguments:nil
 																	   error:nil]int32Value];
 	//NSLog(@"count %d",count);
