@@ -60,8 +60,6 @@
 		14A8D20610CE5956003857E3 /* Common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
 		14A8D20710CE5956003857E3 /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		14A8D20810CE5956003857E3 /* Developer.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Developer.xcconfig; sourceTree = "<group>"; };
-		14A8D20910CE5956003857E3 /* QSPlugIn_Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = QSPlugIn_Debug.xcconfig; sourceTree = "<group>"; };
-		14A8D20B10CE5956003857E3 /* QSPlugIn_Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = QSPlugIn_Release.xcconfig; sourceTree = "<group>"; };
 		14A8D20C10CE5956003857E3 /* QSPlugIn.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = QSPlugIn.xcconfig; sourceTree = "<group>"; };
 		14A8D20D10CE5956003857E3 /* Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		2EB95CB6134F35C10011C28B /* MailCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MailCore.framework; sourceTree = "<group>"; };
@@ -168,8 +166,6 @@
 				14A8D20610CE5956003857E3 /* Common.xcconfig */,
 				14A8D20710CE5956003857E3 /* Debug.xcconfig */,
 				14A8D20810CE5956003857E3 /* Developer.xcconfig */,
-				14A8D20910CE5956003857E3 /* QSPlugIn_Debug.xcconfig */,
-				14A8D20B10CE5956003857E3 /* QSPlugIn_Release.xcconfig */,
 				14A8D20C10CE5956003857E3 /* QSPlugIn.xcconfig */,
 				14A8D20D10CE5956003857E3 /* Release.xcconfig */,
 			);
