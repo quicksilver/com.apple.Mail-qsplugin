@@ -85,6 +85,7 @@
 		}
 		[qsmessages addObject:child];
 	}
+	[query release];
 	[object setChildren:qsmessages];
 	return YES;
 }

@@ -10,11 +10,10 @@
 													  arguments:[NSArray arrayWithObjects:subject,body,addresses,pathArray,nil]
 														  error:nil]objectValue];
 		//NSLog(@"accounts %@",accounts);
-        NSInteger i; 
-        NSInteger accountIndex=0;
-        for (i=0;i<[accounts count];i++){
+        NSInteger accountIndex = 0;
+        for (NSUInteger i=0; i<[accounts count]; i++) {
             if (emailsShareDomain([addresses lastObject],[[accounts objectAtIndex:i]objectAtIndex:0])){
-                accountIndex=i;   
+                accountIndex = i;
                 break;
             }
         }
@@ -100,6 +99,7 @@
 {
 	NSUserDefaults *mailPrefs = [[NSUserDefaults alloc] init];
 	NSArray *smtpList = [[mailPrefs persistentDomainForName:@"com.apple.mail"] objectForKey:@"DeliveryAccounts"];
+	[mailPrefs release];
 	if ([smtpList count]) {
 		return [smtpList objectAtIndex:0];
 	}

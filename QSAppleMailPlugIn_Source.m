@@ -59,7 +59,7 @@
 }
 
 
-- (id)initFileObject:(QSObject *)object ofType:(NSString *)type{
+- (QSObject *)initFileObject:(QSObject *)object ofType:(NSString *)type{
 	NSString *filePath=[object singleFilePath];
 	NSString *iden=[[filePath lastPathComponent]stringByDeletingPathExtension];
 	NSString *mailbox=[[[filePath stringByDeletingLastPathComponent]stringByDeletingLastPathComponent]lastPathComponent];
@@ -70,7 +70,6 @@
 	[object setObject:messagePath forType:kQSAppleMailMessageType];
 	[object setDetails:[[mditem valueForAttribute:(NSString *)kMDItemAuthors]lastObject]];
 	return object;
-	
 }
 
 - (NSString *)detailsOfObject:(QSObject *)object{
@@ -309,7 +308,7 @@
 	NSError *err = nil;
 	NSString *fileContents = [NSString stringWithContentsOfFile:[object objectForType:QSFilePathType] encoding:NSASCIIStringEncoding error:&err];
 	if (!fileContents || err) {
-		NSLog(@"Couldn't read mail. Error: %@ (%ld - %@)", [err localizedDescription], [err code], [object objectForType:QSFilePathType]);
+		NSLog(@"Couldn't read mail. Error: %@ (%ld - %@)", [err localizedDescription], (long)[err code], [object objectForType:QSFilePathType]);
 		return nil;
 	}
 
