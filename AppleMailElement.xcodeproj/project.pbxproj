@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2EB95CB7134F35C10011C28B /* MailCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EB95CB6134F35C10011C28B /* MailCore.framework */; };
-		2EB95D7D134F38650011C28B /* MailCore.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 2EB95CB6134F35C10011C28B /* MailCore.framework */; };
 		2EB95DA3134F3D460011C28B /* Mail.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 2EB95DA2134F3D2B0011C28B /* Mail.scpt */; };
 		2EBE6C091350F99C00C71301 /* Drafts.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2EBE6C051350F99C00C71301 /* Drafts.icns */; };
 		2EBE6C0A1350F99C00C71301 /* Junk.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2EBE6C061350F99C00C71301 /* Junk.icns */; };
@@ -49,7 +47,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				2EB95D7D134F38650011C28B /* MailCore.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -62,7 +59,6 @@
 		14A8D20810CE5956003857E3 /* Developer.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Developer.xcconfig; sourceTree = "<group>"; };
 		14A8D20C10CE5956003857E3 /* QSPlugIn.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = QSPlugIn.xcconfig; sourceTree = "<group>"; };
 		14A8D20D10CE5956003857E3 /* Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
-		2EB95CB6134F35C10011C28B /* MailCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MailCore.framework; sourceTree = "<group>"; };
 		2EB95DA2134F3D2B0011C28B /* Mail.scpt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.scpt; path = Mail.scpt; sourceTree = "<group>"; };
 		2EBE6C051350F99C00C71301 /* Drafts.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Drafts.icns; sourceTree = "<group>"; };
 		2EBE6C061350F99C00C71301 /* Junk.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Junk.icns; sourceTree = "<group>"; };
@@ -91,7 +87,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D1AC9700486D14A00FE50C9 /* Cocoa.framework in Frameworks */,
-				2EB95CB7134F35C10011C28B /* MailCore.framework in Frameworks */,
 				D409AC2C15656B4C00D4D364 /* ScriptingBridge.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -139,7 +134,6 @@
 			children = (
 				DD92D38A0106425D02CA0E72 /* Cocoa.framework */,
 				D409AC2915656B2800D4D364 /* ScriptingBridge.framework */,
-				2EB95CB6134F35C10011C28B /* MailCore.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
