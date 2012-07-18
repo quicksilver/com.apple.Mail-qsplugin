@@ -101,7 +101,13 @@
 	NSArray *smtpList = [[mailPrefs persistentDomainForName:@"com.apple.mail"] objectForKey:@"DeliveryAccounts"];
 	[mailPrefs release];
 	if ([smtpList count]) {
-		return [smtpList objectAtIndex:0];
+		NSMutableDictionary *details = [[smtpList objectAtIndex:0] mutableCopy];
+		[details setObject:[details objectForKey:@"SSLEnabled"] forKey:QSMailMediatorTLS];
+		if ([[details objectForKey:QSMailMediatorAuthenticate] isEqualToString:@"YES"]) {
+			// TODO get password from Keychain
+			[details setObject:@"fake password" forKey:QSMailMediatorPassword];
+		}
+		return details;
 	}
 	return nil;
 }
