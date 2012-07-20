@@ -72,29 +72,6 @@
     mailScript = [newMailScript retain];
 }
 
-
-//--------------------
-
-- (BOOL)drawIconForObject:(QSObject *)object inRect:(NSRect)rect flipped:(BOOL)flipped{
-	if (![object objectForType:QSProcessType]){ return NO; }
-	
-	NSInteger count=[[[self mailScript] executeSubroutine:@"unread_count"
-																   arguments:nil
-																	   error:nil]int32Value];
-	//NSLog(@"count %d",count);
-	NSImage *icon=[object icon];
-	[icon setFlipped:flipped];
-	NSImageRep *bestBadgeRep=[icon bestRepresentationForSize:rect.size];    
-	[icon setSize:[bestBadgeRep size]];
-	[icon drawInRect:rect fromRect:NSMakeRect(0,0,[bestBadgeRep size].width,[bestBadgeRep size].height) operation:NSCompositeSourceOver fraction:1.0];
-	
-	QSCountBadgeImage *countImage=[QSCountBadgeImage badgeForCount:count];
-	
-	[countImage drawBadgeForIconRect:rect];				
-	
-	return YES;	
-}
-
 - (NSDictionary *)smtpServerDetails
 {
 	NSUserDefaults *mailPrefs = [[NSUserDefaults alloc] init];
@@ -110,6 +87,11 @@
 		return details;
 	}
 	return nil;
+}
+
+- (NSImage *)iconForAction:(NSString *)actionID
+{
+	return [QSResourceManager imageNamed:@"com.apple.Mail"];
 }
 
 @end
