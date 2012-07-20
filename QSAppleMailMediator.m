@@ -91,6 +91,10 @@
 
 - (NSImage *)iconForAction:(NSString *)actionID
 {
+	if ([actionID isEqualToString:@"QSEmailItemAction"] || [actionID isEqualToString:@"QSEmailItemReverseAction"]) {
+		// actions that send immediately
+		return [QSResourceManager imageNamed:@"MailMailbox-Sent"];
+	}
 	return [QSResourceManager imageNamed:@"com.apple.Mail"];
 }
 
