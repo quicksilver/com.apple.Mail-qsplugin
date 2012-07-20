@@ -6,8 +6,6 @@
 //  Copyright __MyCompanyName__ 2004. All rights reserved.
 //
 
-#import <MailCore/MailCore.h>
-
 #define kQSAppleMailMailboxType @"qs.mail.mailbox"
 #define kQSAppleMailMessageType @"qs.mail.message"
 #define MAIL_BID @"com.apple.mail"

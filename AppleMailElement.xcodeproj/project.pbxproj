@@ -274,14 +274,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 14A8D20C10CE5956003857E3 /* QSPlugIn.xcconfig */;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					/System/Library/PrivateFrameworks,
-					"$(BUILT_PRODUCTS_DIR)",
-					"$(SRCROOT)",
-					"\"$(SRCROOT)/../Support/MailCore/build/Release\"",
-				);
 				HEADER_SEARCH_PATHS = (
-					../Support/MailCore/include,
+					../Support/MailCore/Source,
 					"../Support/MailCore/libetpan/build-mac/include",
 				);
 				PRODUCT_NAME = "Apple Mail Plugin";
@@ -306,14 +300,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 14A8D20C10CE5956003857E3 /* QSPlugIn.xcconfig */;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					/System/Library/PrivateFrameworks,
-					"$(BUILT_PRODUCTS_DIR)",
-					"$(SRCROOT)",
-					"\"$(SRCROOT)/../Support/MailCore/build/Release\"",
-				);
 				HEADER_SEARCH_PATHS = (
-					../Support/MailCore/include,
+					../Support/MailCore/Source,
 					"../Support/MailCore/libetpan/build-mac/include",
 				);
 				PRODUCT_NAME = "Apple Mail Plugin";

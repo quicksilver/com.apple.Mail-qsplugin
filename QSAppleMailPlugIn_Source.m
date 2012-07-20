@@ -7,6 +7,7 @@
 //
 
 #import "QSAppleMailPlugIn_Source.h"
+#import "MailCore.h"
 
 @interface QSAppleMailPlugIn_Source (hidden)
 - (QSObject *)makeMailboxObject:(NSString *)mailbox withAccountName:(NSString *)accountName withAccountId:(NSString *)accountId withFile:(NSString *)file withChildren:(BOOL)loadChildren;
