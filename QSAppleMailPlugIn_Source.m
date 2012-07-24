@@ -7,7 +7,6 @@
 //
 
 #import "QSAppleMailPlugIn_Source.h"
-#import "MailCore.h"
 
 @interface QSAppleMailPlugIn_Source (hidden)
 - (QSObject *)makeMailboxObject:(NSString *)mailbox withAccountName:(NSString *)accountName withAccountId:(NSString *)accountId withFile:(NSString *)file withChildren:(BOOL)loadChildren;
@@ -114,9 +113,9 @@
 	}
 	
 	// messages always have children: body text and from-address
-	if([[object primaryType] isEqualToString:kQSAppleMailMessageType]) {
-		return YES;
-	}
+//	if([[object primaryType] isEqualToString:kQSAppleMailMessageType]) {
+//		return YES;
+//	}
 	return NO;
 }
 
@@ -134,10 +133,10 @@
 		[object setChildren:[self mailsForMailbox:object]];
 		return YES; 
 	}
-	if ([[object primaryType]isEqualToString:kQSAppleMailMessageType]){
-		[object setChildren:[self mailContent:object]];
-		return YES;
-	}
+//	if ([[object primaryType]isEqualToString:kQSAppleMailMessageType]){
+//		[object setChildren:[self mailContent:object]];
+//		return YES;
+//	}
 	return NO;
 }
 
@@ -301,50 +300,32 @@
 	return objects;
 }
 
-- (NSArray *)mailContent:(QSObject *)object {
-	NSMutableArray *objects=[NSMutableArray arrayWithCapacity:1];
-	QSObject *newObject;
-
-	// read mail file
-	NSError *err = nil;
-	NSString *fileContents = [NSString stringWithContentsOfFile:[object objectForType:QSFilePathType] encoding:NSASCIIStringEncoding error:&err];
-	if (!fileContents || err) {
-		NSLog(@"Couldn't read mail. Error: %@ (%ld - %@)", [err localizedDescription], (long)[err code], [object objectForType:QSFilePathType]);
-		return nil;
-	}
-
-	// remove non-MIME-stuff
-	NSCharacterSet *cs = [NSCharacterSet newlineCharacterSet];
-	NSRange r = [fileContents rangeOfCharacterFromSet:cs];
-	fileContents = [fileContents substringFromIndex:(r.location+r.length)];
-	fileContents = [fileContents substringToIndex:[fileContents rangeOfString:@"<?xml"].location];
-
-	// make sure, it an ASCII string
-	if (![fileContents canBeConvertedToEncoding:NSASCIIStringEncoding]) {
-		NSData *d = [fileContents dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
-		fileContents = [[[NSString alloc] initWithData:d encoding:NSASCIIStringEncoding] autorelease];
-	}
-
-	// parse message
-	CTCoreMessage *message =  [[CTCoreMessage alloc] initWithString:fileContents];
-	[message fetchBody];
-
-	// create QSObjects
-	newObject=[QSObject objectWithString:[[message body] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
-	[newObject setParentID:[object identifier]];
-	[objects addObject:newObject];
-
-	CTCoreAddress * from = [[message from] anyObject];
-	[message release];
-
-	newObject=[QSObject objectWithName:[from email]];
-	[newObject setObject:[from email] forType:QSEmailAddressType];
-	[newObject setDetails:[from name]];
-	[newObject setParentID:[object identifier]];
-	[newObject setPrimaryType:QSEmailAddressType];
-	[objects addObject:newObject];
-
-	return objects;
-}
+//- (NSArray *)mailContent:(QSObject *)object
+//{
+//	NSMutableArray *objects = [NSMutableArray arrayWithCapacity:1];
+//	QSObject *newObject;
+//
+//	// read mail file and parse message
+//	CTCoreMessage *message = [[CTCoreMessage alloc] initWithFileAtPath:@"/Users/rob/example.msg"];
+//	if (message) {
+//		// create QSObjects
+//		newObject = [QSObject objectWithString:[[message body] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
+//		[newObject setParentID:[object identifier]];
+//		[objects addObject:newObject];
+//		
+//		CTCoreAddress *from = [[message from] anyObject];
+//		[message release];
+//		
+//		newObject = [QSObject objectWithName:[from email]];
+//		[newObject setObject:[from email] forType:QSEmailAddressType];
+//		[newObject setDetails:[from name]];
+//		[newObject setParentID:[object identifier]];
+//		[newObject setPrimaryType:QSEmailAddressType];
+//		[objects addObject:newObject];
+//		
+//		return objects;
+//	}
+//	return nil;
+//}
 
 @end
