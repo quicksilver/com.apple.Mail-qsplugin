@@ -287,6 +287,7 @@
 			[messageObject setParentID:[object identifier]];
 			[messageObject setIdentifier:[NSString stringWithFormat:@"message:%@", [message valueForAttribute:(NSString *)kMDItemFSName]]];
 			[messageObject setObject:accountID forMeta:@"accountId"];
+			[messageObject setObject:[object details] forMeta:@"accountName"];
 			[messageObject setObject:[message valueForAttribute:(NSString *)kMDItemFSName] forMeta:@"message_id"];
 			[messageObject setObject:mailboxName forMeta:@"mailboxName"];
 			[messageObject setObject:accountPath forMeta:@"accountPath"];
