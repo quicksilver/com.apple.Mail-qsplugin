@@ -255,6 +255,8 @@
 				<string>Mail Support</string>
 			</dict>
 		</array>
+		<key>version</key>
+		<string>3926</string>
 	</dict>
 	<key>QSResourceAdditions</key>
 	<dict>
