@@ -249,7 +249,7 @@
 	NSString *accountID = [object objectForMeta:@"accountId"];
 	NSString *accountPath = [object objectForMeta:@"accountPath"];
 	NSString *mailbox = [object objectForMeta:@"mailbox"];
-	NSString *subject, *sender, *mailPath, *subPath, *childPath;
+	NSString *subPath, *childPath;
 	NSMutableArray *objects = [NSMutableArray arrayWithCapacity:0];
 	QSObject *newObject;
 	NSFileManager *manager = [NSFileManager defaultManager];
@@ -278,23 +278,23 @@
 		NSMetadataQuery *messageQuery = [[NSMetadataQuery alloc] init];
 		NSSet *messageContainer = [NSSet setWithObject:childPath];
 		[messageQuery resultsForSearchString:@"kMDItemKind == 'Mail Message'" inFolders:messageContainer];
-		for (NSMetadataItem *message in [messageQuery results]) {
-			subject = [message valueForAttribute:(NSString *)kMDItemSubject];
-			sender = [[message valueForAttribute:(NSString *)kMDItemAuthors] lastObject];
-			mailPath = [message valueForAttribute:@"kMDItemPath"];
-			newObject=[QSObject objectWithName:subject];
-			[newObject setDetails:sender];
-			[newObject setParentID:[object identifier]];
-			[newObject setIdentifier:[NSString stringWithFormat:@"message:%@", [message valueForAttribute:(NSString *)kMDItemFSName]]];
-			[newObject setObject:accountID forMeta:@"accountId"];
-			[newObject setObject:[message valueForAttribute:(NSString *)kMDItemFSName] forMeta:@"message_id"];
-			[newObject setObject:mailboxName forMeta:@"mailboxName"];
-			[newObject setObject:accountPath forMeta:@"accountPath"];
-			[newObject setObject:subject forType:kQSAppleMailMessageType];
-			[newObject setObject:mailPath forType:QSFilePathType];
-			[newObject setPrimaryType:kQSAppleMailMessageType];
-			[objects addObject:newObject];
-		}
+		[[messageQuery results] enumerateObjectsWithOptions:NSEnumerationConcurrent usingBlock:^(NSMetadataItem *message, NSUInteger i, BOOL *stop) {
+			NSString *subject = [message valueForAttribute:(NSString *)kMDItemSubject];
+			NSString *sender = [[message valueForAttribute:(NSString *)kMDItemAuthors] lastObject];
+			NSString *mailPath = [message valueForAttribute:@"kMDItemPath"];
+			QSObject *messageObject = [QSObject objectWithName:subject];
+			[messageObject setDetails:sender];
+			[messageObject setParentID:[object identifier]];
+			[messageObject setIdentifier:[NSString stringWithFormat:@"message:%@", [message valueForAttribute:(NSString *)kMDItemFSName]]];
+			[messageObject setObject:accountID forMeta:@"accountId"];
+			[messageObject setObject:[message valueForAttribute:(NSString *)kMDItemFSName] forMeta:@"message_id"];
+			[messageObject setObject:mailboxName forMeta:@"mailboxName"];
+			[messageObject setObject:accountPath forMeta:@"accountPath"];
+			[messageObject setObject:subject forType:kQSAppleMailMessageType];
+			[messageObject setObject:mailPath forType:QSFilePathType];
+			[messageObject setPrimaryType:kQSAppleMailMessageType];
+			[objects addObject:messageObject];
+		}];
 		[messageQuery release];
 	}
 	return objects;
