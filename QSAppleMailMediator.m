@@ -90,8 +90,16 @@
 		NSMutableDictionary *details = [[smtpList objectAtIndex:0] mutableCopy];
 		[details setObject:[details objectForKey:@"SSLEnabled"] forKey:QSMailMediatorTLS];
 		if ([[details objectForKey:QSMailMediatorAuthenticate] isEqualToString:@"YES"]) {
-			// TODO get password from Keychain
-			[details setObject:@"fake password" forKey:QSMailMediatorPassword];
+			NSString *server = [details objectForKey:QSMailMediatorServer];
+			NSString *user = [details objectForKey:QSMailMediatorUsername];
+			UInt32 passLen = 0;
+			void *password = nil;
+			OSStatus status = SecKeychainFindInternetPassword(NULL, (UInt32)[server length], [server UTF8String], 0, NULL, (UInt32)[user length], [user UTF8String], 0, NULL, 0, kSecProtocolTypeSMTP, kSecAuthenticationTypeDefault, &passLen, &password, NULL);
+			if (status == noErr) {
+				NSString *smtpPassword = [NSString stringWithCString:password encoding:[NSString defaultCStringEncoding]];
+				SecKeychainItemFreeContent(NULL, password);
+				[details setObject:smtpPassword forKey:QSMailMediatorPassword];
+			}
 		}
 		return details;
 	}
