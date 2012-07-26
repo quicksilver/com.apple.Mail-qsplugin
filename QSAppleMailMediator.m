@@ -74,9 +74,18 @@
 
 - (NSDictionary *)smtpServerDetails
 {
-	NSUserDefaults *mailPrefs = [[NSUserDefaults alloc] init];
-	NSArray *smtpList = [[mailPrefs persistentDomainForName:@"com.apple.mail"] objectForKey:@"DeliveryAccounts"];
-	[mailPrefs release];
+	// read Mail.app's preferences
+	NSString *prefs = [@"~/Library/Preferences/" stringByStandardizingPath];
+	NSArray *paths = [[NSFileManager defaultManager] subpathsAtPath:prefs];
+	NSDictionary *mailPrefs = nil;
+	for (NSString *prefFile in paths) {
+		if ([prefFile hasPrefix:@"com.apple.mail.plist."] && ![prefFile hasSuffix:@".lockfile"]) {
+			NSString *prefPath = [prefs stringByAppendingPathComponent:prefFile];
+			mailPrefs = [NSDictionary dictionaryWithContentsOfFile:prefPath];
+			break;
+		}
+	}
+	NSArray *smtpList = [mailPrefs objectForKey:@"DeliveryAccounts"];
 	if ([smtpList count]) {
 		NSMutableDictionary *details = [[smtpList objectAtIndex:0] mutableCopy];
 		[details setObject:[details objectForKey:@"SSLEnabled"] forKey:QSMailMediatorTLS];
