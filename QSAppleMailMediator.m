@@ -79,7 +79,7 @@
 	NSArray *paths = [[NSFileManager defaultManager] subpathsAtPath:prefs];
 	NSDictionary *mailPrefs = nil;
 	for (NSString *prefFile in paths) {
-		if ([prefFile hasPrefix:@"com.apple.mail.plist."] && ![prefFile hasSuffix:@".lockfile"]) {
+		if ([prefFile hasPrefix:@"com.apple.mail.plist"] && ![prefFile hasSuffix:@".lockfile"]) {
 			NSString *prefPath = [prefs stringByAppendingPathComponent:prefFile];
 			mailPrefs = [NSDictionary dictionaryWithContentsOfFile:prefPath];
 			break;
