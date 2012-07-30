@@ -20,7 +20,7 @@
 	<string>3.0.0</string>
 	<key>CFBundleVersion</key>
 	<string>11C</string>
-	<key>QSActions</key>
+	<key>QSActionsDisabled</key>
 	<dict>
 		<key>QSAppleMailMailboxOpenAction</key>
 		<dict>
@@ -124,7 +124,7 @@
 			<string>com.apple.Mail</string>
 		</array>
 	</dict>
-	<key>QSPresetAdditions</key>
+	<key>QSPresetAdditionsDisabled</key>
 	<array>
 		<dict>
 			<key>ID</key>
