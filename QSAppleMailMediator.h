@@ -4,4 +4,5 @@
     NSAppleScript *mailScript;
 }
 - (NSAppleScript *)mailScript;
++ (NSDictionary *)mailPreferences;
 @end

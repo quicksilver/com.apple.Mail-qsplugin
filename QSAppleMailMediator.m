@@ -72,9 +72,9 @@
     mailScript = [newMailScript retain];
 }
 
-- (NSDictionary *)smtpServerDetails
++ (NSDictionary *)mailPreferences
 {
-	// read Mail.app's preferences
+	// locate and read Mail.app's preferences
 	NSString *prefs = [@"~/Library/Preferences/" stringByStandardizingPath];
 	NSArray *paths = [[NSFileManager defaultManager] subpathsAtPath:prefs];
 	NSDictionary *mailPrefs = nil;
@@ -85,7 +85,12 @@
 			break;
 		}
 	}
-	NSArray *smtpList = [mailPrefs objectForKey:@"DeliveryAccounts"];
+	return mailPrefs;
+}
+
+- (NSDictionary *)smtpServerDetails
+{
+	NSArray *smtpList = [[QSAppleMailMediator mailPreferences] objectForKey:@"DeliveryAccounts"];
 	if ([smtpList count]) {
 		NSMutableDictionary *details = [[smtpList objectAtIndex:0] mutableCopy];
 		[details setObject:[details objectForKey:@"SSLEnabled"] forKey:QSMailMediatorTLS];
@@ -114,5 +119,7 @@
 	}
 	return [QSResourceManager imageNamed:@"com.apple.Mail"];
 }
+
+
 
 @end

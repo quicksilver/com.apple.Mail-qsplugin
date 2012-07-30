@@ -7,6 +7,7 @@
 //
 
 #import "QSAppleMailPlugIn_Source.h"
+#import "QSAppleMailMediator.h"
 
 @interface QSAppleMailPlugIn_Source (hidden)
 - (QSObject *)makeMailboxObject:(NSString *)mailbox withAccountName:(NSString *)accountName withAccountId:(NSString *)accountId withFile:(NSString *)file withChildren:(BOOL)loadChildren;
@@ -161,9 +162,8 @@
 	NSDirectoryEnumerator *mailboxEnum;
 
 	// find real names for accounts
-	NSUserDefaults *mailPrefs = [[NSUserDefaults alloc] init];
-	NSArray *pl = [[mailPrefs persistentDomainForName:@"com.apple.mail"] objectForKey:@"MailAccounts"];
-	[mailPrefs release];
+	NSDictionary *mailPrefs = [QSAppleMailMediator mailPreferences];
+	NSArray *pl = [mailPrefs objectForKey:@"MailAccounts"];
 	NSMutableDictionary *realAccountNames = [NSMutableDictionary dictionaryWithCapacity:[pl count]];
 	for(NSDictionary *dict in pl) {
 		if ([dict objectForKey:@"AccountPath"] != nil && [dict objectForKey:@"AccountName"] != nil) {
