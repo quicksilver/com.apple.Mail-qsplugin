@@ -8,8 +8,12 @@
 
 #import "QSAppleMailMediator.h"
 #define QSAppleMailPlugIn_Type @"QSAppleMailPlugIn_Type"
+
+@class MailApplication;
+
 @interface QSAppleMailPlugIn_Action : QSActionProvider
 {
+	MailApplication *Mail;
 }
 @end
 
