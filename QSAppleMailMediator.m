@@ -78,13 +78,10 @@
 	NSString *prefs = [@"~/Library/Preferences/" stringByStandardizingPath];
 	NSArray *paths = [[NSFileManager defaultManager] subpathsAtPath:prefs];
 	NSDictionary *mailPrefs = nil;
-	for (NSString *prefFile in paths) {
-		if ([prefFile hasPrefix:@"com.apple.mail.plist"] && ![prefFile hasSuffix:@".lockfile"]) {
-			NSString *prefPath = [prefs stringByAppendingPathComponent:prefFile];
-			mailPrefs = [NSDictionary dictionaryWithContentsOfFile:prefPath];
-			break;
-		}
-	}
+	NSPredicate *mailPrefix = [NSPredicate predicateWithFormat:@"SELF BEGINSWITH[c] 'com.apple.mail' AND NOT SELF ENDSWITH[c] '.lockfile'"];
+	NSString *prefFile = [[paths filteredArrayUsingPredicate:mailPrefix] objectAtIndex:0];
+	NSString *prefPath = [prefs stringByAppendingPathComponent:prefFile];
+	mailPrefs = [NSDictionary dictionaryWithContentsOfFile:prefPath];
 	return mailPrefs;
 }
 
