@@ -7,6 +7,7 @@
 //
 
 #import "QSAppleMailPlugIn_Source.h"
+#import "QSAppleMailMediator.h"
 
 @interface QSAppleMailPlugIn_Source (hidden)
 - (QSObject *)makeMailboxObject:(NSString *)mailbox withAccountName:(NSString *)accountName withAccountId:(NSString *)accountId withFile:(NSString *)file withChildren:(BOOL)loadChildren;
@@ -59,7 +60,7 @@
 }
 
 
-- (id)initFileObject:(QSObject *)object ofType:(NSString *)type{
+- (QSObject *)initFileObject:(QSObject *)object ofType:(NSString *)type{
 	NSString *filePath=[object singleFilePath];
 	NSString *iden=[[filePath lastPathComponent]stringByDeletingPathExtension];
 	NSString *mailbox=[[[filePath stringByDeletingLastPathComponent]stringByDeletingLastPathComponent]lastPathComponent];
@@ -70,7 +71,6 @@
 	[object setObject:messagePath forType:kQSAppleMailMessageType];
 	[object setDetails:[[mditem valueForAttribute:(NSString *)kMDItemAuthors]lastObject]];
 	return object;
-	
 }
 
 - (NSString *)detailsOfObject:(QSObject *)object{
@@ -92,31 +92,23 @@
 	if([[object primaryType] isEqualToString:kQSAppleMailMailboxType])
 	{
 		NSFileManager *fm = [NSFileManager defaultManager];
-		NSArray *files = [fm subpathsAtPath:[NSString stringWithFormat:@"%@/%@.%@/Messages",
+		NSArray *files = [fm subpathsAtPath:[NSString stringWithFormat:@"%@/%@.%@",
 												[object objectForMeta:@"accountPath"],
 												[object objectForMeta:@"mailboxName"],
 												[object objectForMeta:@"mailboxType"]]];
-		// mailbox doesn't have a "Messages" folder or there are no files in it, it can't have messages
+		// mailbox doesn't have any files in it, it can't have messages
 		if ([files count] <= 0) {
 			return NO;
 		}
 		
-		// if there are no .emlx files in it, there are also no messages
-		NSUInteger index = [files indexOfObjectPassingTest:^(id obj, NSUInteger idx, BOOL *stop) {
-			return [obj hasSuffix:@".emlx"];
-		}];
-		if(index == NSNotFound) {
-			return NO;
-		}
-		
-		// seems like there are .emlx files, so there are messages, so set the right-arrow indicator
+		// seems like there are files, so set the right-arrow indicator
 		return YES;
 	}
 	
 	// messages always have children: body text and from-address
-	if([[object primaryType] isEqualToString:kQSAppleMailMessageType]) {
-		return YES;
-	}
+//	if([[object primaryType] isEqualToString:kQSAppleMailMessageType]) {
+//		return YES;
+//	}
 	return NO;
 }
 
@@ -134,10 +126,10 @@
 		[object setChildren:[self mailsForMailbox:object]];
 		return YES; 
 	}
-	if ([[object primaryType]isEqualToString:kQSAppleMailMessageType]){
-		[object setChildren:[self mailContent:object]];
-		return YES;
-	}
+//	if ([[object primaryType]isEqualToString:kQSAppleMailMessageType]){
+//		[object setChildren:[self mailContent:object]];
+//		return YES;
+//	}
 	return NO;
 }
 
@@ -155,11 +147,15 @@
 
 	NSString *path = [MAILPATH stringByStandardizingPath];
 	NSFileManager *fm = [NSFileManager defaultManager];
+	if ([NSApplication isLion]) {
+		path = [path stringByAppendingPathComponent:@"V2"];
+	}
 	NSDirectoryEnumerator *accountEnum = [fm enumeratorAtPath:path];
 	NSDirectoryEnumerator *mailboxEnum;
 
 	// find real names for accounts
-	NSArray *pl = (NSArray *)CFPreferencesCopyAppValue(CFSTR("MailAccounts"), CFSTR("com.apple.mail"));
+	NSDictionary *mailPrefs = [QSAppleMailMediator mailPreferences];
+	NSArray *pl = [mailPrefs objectForKey:@"MailAccounts"];
 	NSMutableDictionary *realAccountNames = [NSMutableDictionary dictionaryWithCapacity:[pl count]];
 	for(NSDictionary *dict in pl) {
 		if ([dict objectForKey:@"AccountPath"] != nil && [dict objectForKey:@"AccountName"] != nil) {
@@ -224,14 +220,16 @@
 	NSString *mailboxType = [mailbox pathExtension];
 	NSString *mailboxName = [mailbox stringByDeletingPathExtension];
 
-	QSObject *newObject = [QSObject objectWithName:mailboxName];
+	QSObject *newObject = [QSObject objectWithName:[NSString stringWithFormat:@"%@ %@", accountName, mailboxName]];
 	[newObject setObject:mailboxName forType:kQSAppleMailMailboxType];
-	[newObject setLabel:[NSString stringWithFormat:@"%@ %@", accountName, mailboxName]];
+	[newObject setLabel:mailboxName];
 	[newObject setDetails:accountName];
 	[newObject setObject:accountId forMeta:@"accountId"];
 	[newObject setObject:mailboxType forMeta:@"mailboxType"];
+	[newObject setObject:mailbox forMeta:@"mailbox"];
 	[newObject setIdentifier:[NSString stringWithFormat:@"mailbox:%@//%@", accountName, mailboxName]];
-	[newObject setObject:[[MAILPATH stringByAppendingPathComponent:file] stringByStandardizingPath] forMeta:@"accountPath"];
+	NSString *accountPath = [NSApplication isLion] ? [MAILPATH stringByAppendingPathComponent:@"V2"] : MAILPATH;
+	[newObject setObject:[[accountPath stringByAppendingPathComponent:file] stringByStandardizingPath] forMeta:@"accountPath"];
 	[newObject setObject:mailboxName forMeta:@"mailboxName"];
 	[newObject setObject:[NSNumber numberWithBool:loadChildren] forMeta:@"loadChildren"];
 	[newObject setPrimaryType:kQSAppleMailMailboxType];
@@ -239,158 +237,88 @@
 }
 
 - (NSArray *)mailsForMailbox:(QSObject *)object {
-	NSString *mailboxName=[object objectForType:kQSAppleMailMailboxType];
-	NSString *accountName=[object objectForMeta:@"accountId"];
-	NSString *accountPath=[object objectForMeta:@"accountPath"];
-	
-	// make 'Envelop Index' compatible mailbox-url
-	NSString *mailboxUrl;
-	if ([accountName isEqualToString:@"Local Mailbox"]) {
-		mailboxUrl = [NSString stringWithFormat:@"%@/%@",
-					  @"local://",
-					  [mailboxName stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-	} else {
-		// replace special chars with % representation 
-		// but not last @. strange Envelop Index / ~Library/Mail/ format requires that
-		NSRange r = [accountName rangeOfString:@"@" options:NSBackwardsSearch];
-		// If there's @ sign existed in the accountName string
-		if(r.location != NSNotFound)
-		{
-			NSString *p1, *p2;
-			p1 = [accountName substringToIndex:r.location];
-			p1 = [p1 stringByReplacing:@"@" with:@"%40"];
-			p2 = [accountName substringFromIndex:r.location + 1];
-			mailboxUrl = [NSString stringWithFormat:@"%@@%@/%@",
-						  p1,
-						  p2,
-						  [mailboxName stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-		}
-		// If the @ sign didn't exist (e.g. Mobile Me accounts)
-		else {
-			mailboxUrl =  [NSString stringWithFormat:@"%@@mail.mac.com/%@",accountName,[mailboxName stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-		}
-	}
-	
-	NSString *mailboxType;
-	if ([accountName isEqualToString:@"Local Mailbox"] ||
-		[accountPath rangeOfString:@"POP"].location != NSNotFound) {
-		mailboxType = @"mbox";
-	} else {
-		mailboxType = @"imapmbox";
-	}
-	
-	// NSLog(@"Mailbox URL: %@", mailboxUrl);
-	// read mails for mailbox from SQLite DB Envelop Index
-	NSString *dbPath = [[MAILPATH stringByAppendingString:@"/Envelope Index"] stringByStandardizingPath];
-	FMDatabase *db = [FMDatabase databaseWithPath:dbPath];
-	if (![db open]) {
-		NSLog(@"Could not open db.");
-		return NO;
-	}
-	// kind of experimentalish.
-	[db setShouldCacheStatements:YES];
-
-	// build SQL query
-	NSString *subject, *sender, *mailPath;
-	NSMutableArray *objects=[NSMutableArray arrayWithCapacity:0];
+	NSString *mailboxName = [object objectForType:kQSAppleMailMailboxType];
+	NSString *accountID = [object objectForMeta:@"accountId"];
+	NSString *accountPath = [object objectForMeta:@"accountPath"];
+	NSString *mailbox = [object objectForMeta:@"mailbox"];
+	NSString *subPath, *childPath;
+	NSMutableArray *objects = [NSMutableArray arrayWithCapacity:0];
 	QSObject *newObject;
-	NSString *query = [NSString stringWithFormat:@"SELECT "
-					   "mailboxes.url AS url, "
-					   "messages.ROWID AS message_id, "
-					   "messages.subject_prefix AS subject_prefix, "
-					   "subjects.subject AS subject, "
-					   "addresses.address AS sender "
-					   "FROM mailboxes "
-					   "LEFT JOIN messages ON messages.mailbox = mailboxes.ROWID "
-					   "LEFT JOIN subjects ON subjects.ROWID = messages.subject "
-					   "LEFT JOIN addresses ON addresses.ROWID = messages.sender "
-					   "WHERE url LIKE '%%%@'"
-					   "ORDER BY messages.date_received DESC",
-					   mailboxUrl];
-	FMResultSet *rs = [db executeQuery:query];
-	if ([db hadError]) {
-		NSLog(@"Error %d: %@", [db lastErrorCode], [db lastErrorMessage]);
-		return NO;
-	}
-	while ([rs next]) {
-		subject = [[rs stringForColumn:@"subject_prefix"] stringByAppendingString:[rs stringForColumn:@"subject"]];
-		sender = [rs stringForColumn:@"sender"];
-		if ([subject length] == 0 && [sender length] == 0) {
-			// sometimes there is no sender/subject
-			// I don't know why they appear, they are not really messages.
-			// So, just skip them.
-			continue;
-		}
-
-		mailPath = [NSString stringWithFormat:@"%@/%@.%@/Messages/%@.emlx",
-					accountPath,
-					mailboxName,
-					mailboxType,
-					[rs stringForColumn:@"message_id"]];
-
-		newObject=[QSObject objectWithName:subject];
-		[newObject setObject:subject forType:kQSAppleMailMessageType];
-		[newObject setDetails:sender];
-		[newObject setParentID:[object identifier]];
-		[newObject setIdentifier:[NSString stringWithFormat:@"message:%d", [rs intForColumn:@"message_id"]]];
-		[newObject setObject:mailPath forMeta:@"mailPath"];
-		[newObject setObject:accountName forMeta:@"accountId"];
-		[newObject setObject:[rs stringForColumn:@"message_id"] forMeta:@"message_id"];
-		[newObject setObject:mailboxName forMeta:@"mailboxName"];
-		[newObject setObject:accountPath forMeta:@"accountPath"];
-		[newObject setPrimaryType:kQSAppleMailMessageType];
+	NSFileManager *manager = [NSFileManager defaultManager];
+	// predicate to find sub-mailboxes
+	NSPredicate *mbox = [NSPredicate predicateWithFormat:@"SELF ENDSWITH[cd] '.mbox'"];
+	// predicate to find messages
+	NSPredicate *messages = [NSPredicate predicateWithFormat:@"NOT SELF ENDSWITH[cd] '.mbox'"];
+	BOOL isDir;
+	NSString *mailboxPath = [accountPath stringByAppendingPathComponent:mailbox];
+	NSArray *subs = [manager contentsOfDirectoryAtPath:mailboxPath error:nil];
+	NSArray *subMailboxes = [subs filteredArrayUsingPredicate:mbox];
+	NSArray *messageStore = [subs filteredArrayUsingPredicate:messages];
+	for (NSString *subMailbox in subMailboxes) {
+		// create QSObject for sub-folder
+		subPath = [[[accountPath pathComponents] lastObject] stringByAppendingPathComponent:mailbox];
+		newObject = [self makeMailboxObject:subMailbox withAccountName:[object details] withAccountId:accountID withFile:subPath withChildren:YES];
 		[objects addObject:newObject];
 	}
-
-	[rs close];
-	[db close];
+	for (NSString *mailboxChild in messageStore) {
+		childPath = [mailboxPath stringByAppendingPathComponent:mailboxChild];
+		[manager fileExistsAtPath:childPath isDirectory:&isDir];
+		if (!isDir) {
+			// skip over plists and other metadata
+			continue;
+		}
+		NSMetadataQuery *messageQuery = [[NSMetadataQuery alloc] init];
+		NSSet *messageContainer = [NSSet setWithObject:childPath];
+		[messageQuery resultsForSearchString:@"kMDItemKind == 'Mail Message'" inFolders:messageContainer];
+		[[messageQuery results] enumerateObjectsWithOptions:NSEnumerationConcurrent usingBlock:^(NSMetadataItem *message, NSUInteger i, BOOL *stop) {
+			NSString *subject = [message valueForAttribute:(NSString *)kMDItemSubject];
+			NSString *sender = [[message valueForAttribute:(NSString *)kMDItemAuthors] lastObject];
+			NSString *mailPath = [message valueForAttribute:@"kMDItemPath"];
+			QSObject *messageObject = [QSObject objectWithName:subject];
+			[messageObject setDetails:sender];
+			[messageObject setParentID:[object identifier]];
+			[messageObject setIdentifier:[NSString stringWithFormat:@"message:%@", [message valueForAttribute:(NSString *)kMDItemFSName]]];
+			[messageObject setObject:accountID forMeta:@"accountId"];
+			[messageObject setObject:[object details] forMeta:@"accountName"];
+			[messageObject setObject:[message valueForAttribute:(NSString *)kMDItemFSName] forMeta:@"message_id"];
+			[messageObject setObject:mailboxName forMeta:@"mailboxName"];
+			[messageObject setObject:accountPath forMeta:@"accountPath"];
+			[messageObject setObject:subject forType:kQSAppleMailMessageType];
+			[messageObject setObject:mailPath forType:QSFilePathType];
+			[messageObject setPrimaryType:kQSAppleMailMessageType];
+			[objects addObject:messageObject];
+		}];
+		[messageQuery release];
+	}
 	return objects;
 }
 
-- (NSArray *)mailContent:(QSObject *)object {
-	NSMutableArray *objects=[NSMutableArray arrayWithCapacity:1];
-	QSObject *newObject;
-
-	// read mail file
-	NSError *err = nil;
-	NSString *fileContents = [NSString stringWithContentsOfFile:[object objectForMeta:@"mailPath"] encoding:NSASCIIStringEncoding error:&err];
-	if (!fileContents || err) {
-		NSLog(@"Couldn't read mail. Error: %@ (%i - %@)", [err localizedDescription], [err code], [object objectForMeta:@"mailPath"]);
-		return nil;
-	}
-
-	// remove non-MIME-stuff
-	NSCharacterSet *cs = [NSCharacterSet newlineCharacterSet];
-	NSRange r = [fileContents rangeOfCharacterFromSet:cs];
-	fileContents = [fileContents substringFromIndex:(r.location+r.length)];
-	fileContents = [fileContents substringToIndex:[fileContents rangeOfString:@"<?xml"].location];
-
-	// make sure, it an ASCII string
-	if (![fileContents canBeConvertedToEncoding:NSASCIIStringEncoding]) {
-		NSData *d = [fileContents dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
-		fileContents = [[[NSString alloc] initWithData:d encoding:NSASCIIStringEncoding] autorelease];
-	}
-
-	// parse message
-	CTCoreMessage *message =  [[CTCoreMessage alloc] initWithString:fileContents];
-	[message fetchBody];
-
-	// create QSObjects
-	newObject=[QSObject objectWithString:[[message body] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
-	[newObject setParentID:[object identifier]];
-	[objects addObject:newObject];
-
-	CTCoreAddress * from = [[message from] anyObject];
-	[message release];
-
-	newObject=[QSObject objectWithName:[from email]];
-	[newObject setObject:[from email] forType:QSEmailAddressType];
-	[newObject setDetails:[from name]];
-	[newObject setParentID:[object identifier]];
-	[newObject setPrimaryType:QSEmailAddressType];
-	[objects addObject:newObject];
-
-	return objects;
-}
+//- (NSArray *)mailContent:(QSObject *)object
+//{
+//	NSMutableArray *objects = [NSMutableArray arrayWithCapacity:1];
+//	QSObject *newObject;
+//
+//	// read mail file and parse message
+//	CTCoreMessage *message = [[CTCoreMessage alloc] initWithFileAtPath:@"/Users/rob/example.msg"];
+//	if (message) {
+//		// create QSObjects
+//		newObject = [QSObject objectWithString:[[message body] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
+//		[newObject setParentID:[object identifier]];
+//		[objects addObject:newObject];
+//		
+//		CTCoreAddress *from = [[message from] anyObject];
+//		[message release];
+//		
+//		newObject = [QSObject objectWithName:[from email]];
+//		[newObject setObject:[from email] forType:QSEmailAddressType];
+//		[newObject setDetails:[from name]];
+//		[newObject setParentID:[object identifier]];
+//		[newObject setPrimaryType:QSEmailAddressType];
+//		[objects addObject:newObject];
+//		
+//		return objects;
+//	}
+//	return nil;
+//}
 
 @end

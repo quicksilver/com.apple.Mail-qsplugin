@@ -1,0 +1,17 @@
+## Apple Mail Plugin ##
+
+This plugin lets you browse your mailboxes and messages contained in Apple Mail.
+
+Just call up Mail.app in the first pane and hit → or /. It will reveal all mailboxes and folders for each account. Arrowing into a mailbox reveals all messages in that folder. The selected message can be viewed with Quick Look or "opened" to reveal it in Mail.
+
+This plugin also allows actions for composing messages or sending messages directly (via the E-mail Support plugin) to funciton based on settings in Apple Mail.
+
+<!-- ### Actions ###
+
+Get New Mail - Recieves new mails for all accounts.
+Open New Messages - Opens all unread messages.
+Open Mailbox - When a mailbox is selected in the first pane, this actions opens it in Mail.app.
+Open Message - When a message is selected in the first pane, this actions opens it in its own window in Mail.app
+Move to Mailbox... - When a message is selected in the first pane, this action moves the message from the current mailbox into another one. The new mailbox can be selected in the third pane.
+Delete Message - Deletes the selected message from a mailbox.
+Note: It has only been tested with IMAP accounts. -->
