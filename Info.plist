@@ -272,7 +272,7 @@ Note: It has only been tested with IMAP accounts. --&gt;</string>
 		<key>MailMailbox-Inbox</key>
 		<dict>
 			<key>bundle</key>
-			<string>com.apple.mail</string>
+			<string>com.blacktree.Quicksilver.QSAppleMailPlugIn</string>
 			<key>resource</key>
 			<string>mailbox.icns</string>
 		</dict>
