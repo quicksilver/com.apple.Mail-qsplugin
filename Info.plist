@@ -260,7 +260,7 @@ Note: It has only been tested with IMAP accounts. --&gt;</string>
 			<key>bundle</key>
 			<string>com.apple.mail</string>
 			<key>resource</key>
-			<string>mbox.icns</string>
+			<string>mailbox.icns</string>
 		</dict>
 		<key>MailMailbox-Drafts</key>
 		<dict>
@@ -274,7 +274,7 @@ Note: It has only been tested with IMAP accounts. --&gt;</string>
 			<key>bundle</key>
 			<string>com.apple.mail</string>
 			<key>resource</key>
-			<string>mbox.icns</string>
+			<string>mailbox.icns</string>
 		</dict>
 		<key>MailMailbox-Junk</key>
 		<dict>
@@ -302,7 +302,7 @@ Note: It has only been tested with IMAP accounts. --&gt;</string>
 			<key>bundle</key>
 			<string>com.apple.mail</string>
 			<key>resource</key>
-			<string>app.icns</string>
+			<string>Mail.icns</string>
 		</dict>
 	</dict>
 </dict>
