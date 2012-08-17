@@ -4,6 +4,21 @@
 
 @implementation QSAppleMailMediator
 
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        mailScript = nil;
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    [mailScript release];
+    [super dealloc];
+}
+
 - (void) sendEmailTo:(NSArray *)addresses from:(NSString *)sender subject:(NSString *)subject body:(NSString *)body attachments:(NSArray *)pathArray sendNow:(BOOL)sendNow{
     if (!sender){
         NSArray *accounts=[[[self mailScript] executeSubroutine:@"account_list"
