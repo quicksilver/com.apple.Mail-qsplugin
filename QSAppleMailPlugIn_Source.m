@@ -73,15 +73,6 @@
 	return object;
 }
 
-- (NSString *)detailsOfObject:(QSObject *)object{
-	if ([[object primaryType]isEqualToString:kQSAppleMailMailboxType]){
-		
-		NSString *mailbox=[object objectForType:kQSAppleMailMailboxType];
-		return [mailbox stringByDeletingLastPathComponent]; 
-	}
-	return nil;
-}
-
 - (BOOL)objectHasChildren:(QSObject *)object{
 	// when mailbox appears in third pane, you can't arrow into it
 	if ([object objectForMeta:@"loadChildren"] != nil && ![[object objectForMeta:@"loadChildren"] boolValue]) {
