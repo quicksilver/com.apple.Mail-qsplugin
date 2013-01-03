@@ -118,6 +118,7 @@
 				[details setObject:smtpPassword forKey:QSMailMediatorPassword];
 			}
 		}
+        [details autorelease];
 		return details;
 	}
 	return nil;
