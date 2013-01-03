@@ -89,13 +89,14 @@
 + (NSDictionary *)mailPreferences
 {
 	// locate and read Mail.app's preferences
-	NSString *prefs = [@"~/Library/Preferences/" stringByStandardizingPath];
-	NSArray *paths = [[NSFileManager defaultManager] subpathsAtPath:prefs];
-	NSDictionary *mailPrefs = nil;
-	NSPredicate *mailPrefix = [NSPredicate predicateWithFormat:@"SELF BEGINSWITH[c] 'com.apple.mail' AND NOT SELF ENDSWITH[c] '.lockfile'"];
-	NSString *prefFile = [[paths filteredArrayUsingPredicate:mailPrefix] objectAtIndex:0];
-	NSString *prefPath = [prefs stringByAppendingPathComponent:prefFile];
-	mailPrefs = [NSDictionary dictionaryWithContentsOfFile:prefPath];
+    // try the sandboxed location
+	NSString *prefs = [@"~/Library/Containers/com.apple.mail/Data/Library/Preferences/com.apple.mail.plist" stringByStandardizingPath];
+    NSDictionary *mailPrefs = [NSDictionary dictionaryWithContentsOfFile:prefs];
+    if (!mailPrefs) {
+        // try the old pre-sandbox location
+        prefs = [@"~/Library/Preferences/com.apple.mail.plist" stringByStandardizingPath];
+        mailPrefs = [NSDictionary dictionaryWithContentsOfFile:prefs];
+    }
 	return mailPrefs;
 }
 
