@@ -20,24 +20,23 @@
 }
 
 - (void) sendEmailTo:(NSArray *)addresses from:(NSString *)sender subject:(NSString *)subject body:(NSString *)body attachments:(NSArray *)pathArray sendNow:(BOOL)sendNow{
-    if (!sender){
-        NSArray *accounts=[[[self mailScript] executeSubroutine:@"account_list"
-													  arguments:[NSArray arrayWithObjects:subject,body,addresses,pathArray,nil]
-														  error:nil]objectValue];
-		//NSLog(@"accounts %@",accounts);
-        NSInteger accountIndex = 0;
-        for (NSUInteger i=0; i<[accounts count]; i++) {
-            if (emailsShareDomain([addresses lastObject],[[accounts objectAtIndex:i]objectAtIndex:0])){
-                accountIndex = i;
-                break;
-            }
+    NSArray *accounts = [[[self mailScript] executeSubroutine:@"account_list" arguments:[NSArray arrayWithObjects:subject, body, addresses, pathArray, nil] error:nil] objectValue];
+    //NSLog(@"accounts %@",accounts);
+    NSInteger accountIndex = -1;
+    for (NSUInteger i = 0; i < [accounts count]; i++) {
+        if (emailsShareDomain([addresses objectAtIndex:0], [[accounts objectAtIndex:i] objectAtIndex:0])){
+            accountIndex = i;
+            break;
         }
-        NSArray *account=[accounts objectAtIndex:accountIndex];
-        NSString *accountFormatted=[(NSString *)[account lastObject]length]?[NSString stringWithFormat:@"%@ <%@>",[account lastObject],[account objectAtIndex:0]]:[account objectAtIndex:0];
-        sender=accountFormatted;
-        //NSLog(@"accounts %@",accountFormatted);
-        
     }
+    if (accountIndex >= 0 || !sender) {
+        // better sender found, or default is missing
+        NSArray *account = [accounts objectAtIndex:accountIndex];
+        NSString *accountFormatted = [(NSString *)[account lastObject]length]?[NSString stringWithFormat:@"%@ <%@>", [account lastObject], [account objectAtIndex:0]]:[account objectAtIndex:0];
+        sender = accountFormatted;
+    }
+    //NSLog(@"accounts %@",accountFormatted);
+        
 	[[QSReg getClassInstance:@"QSMailMediator"] sendEmailWithScript:[self mailScript] to:(NSArray *)addresses from:(NSString *)sender subject:(NSString *)subject body:(NSString *)body attachments:(NSArray *)pathArray sendNow:(BOOL)sendNow];
 
  //   [self superSendEmailTo:(NSArray *)addresses from:(NSString *)sender subject:(NSString *)subject body:(NSString *)body attachments:(NSArray *)pathArray sendNow:(BOOL)sendNow];
