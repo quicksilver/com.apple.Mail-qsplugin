@@ -115,6 +115,10 @@
 			if (status == noErr) {
 				NSString *smtpPassword = [NSString stringWithCString:password encoding:[NSString defaultCStringEncoding]];
 				SecKeychainItemFreeContent(NULL, password);
+                if ([smtpPassword length] > passLen) {
+                    // trim extra characters from the buffer
+                    smtpPassword = [smtpPassword substringToIndex:passLen];
+                }
 				[details setObject:smtpPassword forKey:QSMailMediatorPassword];
 			}
 		}
