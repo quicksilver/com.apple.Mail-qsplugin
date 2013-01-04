@@ -89,15 +89,14 @@
 + (NSDictionary *)mailPreferences
 {
 	// locate and read Mail.app's preferences
-    // try the sandboxed location
-	NSString *prefs = [@"~/Library/Containers/com.apple.mail/Data/Library/Preferences/com.apple.mail.plist" stringByStandardizingPath];
-    NSDictionary *mailPrefs = [NSDictionary dictionaryWithContentsOfFile:prefs];
-    if (!mailPrefs) {
-        // try the old pre-sandbox location
-        prefs = [@"~/Library/Preferences/com.apple.mail.plist" stringByStandardizingPath];
-        mailPrefs = [NSDictionary dictionaryWithContentsOfFile:prefs];
+    NSArray *candidates = [NSArray arrayWithObjects:@"~/Library/Mail/V2/MailData/Accounts.plist", @"~/Library/Containers/com.apple.mail/Data/Library/Preferences/com.apple.mail.plist", @"~/Library/Preferences/com.apple.mail.plist", nil];
+    for (NSString *prefs in candidates) {
+        NSDictionary *mailPrefs = [NSDictionary dictionaryWithContentsOfFile:[prefs stringByStandardizingPath]];
+        if (mailPrefs) {
+            return mailPrefs;
+        }
     }
-	return mailPrefs;
+    return nil;
 }
 
 - (NSDictionary *)smtpServerDetails
