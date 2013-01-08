@@ -31,7 +31,7 @@
     }
     if (accountIndex >= 0 || !sender) {
         // better sender found, or default is missing
-        NSArray *account = [accounts objectAtIndex:accountIndex];
+        NSArray *account = [accounts objectAtIndex:(accountIndex >= 0) ? accountIndex : 0];
         NSString *accountFormatted = [(NSString *)[account lastObject]length]?[NSString stringWithFormat:@"%@ <%@>", [account lastObject], [account objectAtIndex:0]]:[account objectAtIndex:0];
         sender = accountFormatted;
     }
