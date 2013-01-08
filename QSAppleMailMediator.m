@@ -24,9 +24,13 @@
     //NSLog(@"accounts %@",accounts);
     NSInteger accountIndex = -1;
     for (NSUInteger i = 0; i < [accounts count]; i++) {
-        if (emailsShareDomain([addresses objectAtIndex:0], [[accounts objectAtIndex:i] objectAtIndex:0])){
-            accountIndex = i;
-            break;
+        NSString *accountAddress = [[accounts objectAtIndex:i] objectAtIndex:0];
+        for (NSString *address in addresses) {
+            if (emailsShareDomain(address, accountAddress)){
+                accountIndex = i;
+                i = [accounts count]; // stop the outer loop
+                break;                // stop the inner loop
+            }
         }
     }
     if (accountIndex >= 0 || !sender) {
