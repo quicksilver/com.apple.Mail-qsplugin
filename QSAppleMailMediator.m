@@ -21,6 +21,9 @@
 
 - (void) sendEmailTo:(NSArray *)addresses from:(NSString *)sender subject:(NSString *)subject body:(NSString *)body attachments:(NSArray *)pathArray sendNow:(BOOL)sendNow{
     NSArray *accounts = [[[self mailScript] executeSubroutine:@"account_list" arguments:[NSArray arrayWithObjects:subject, body, addresses, pathArray, nil] error:nil] objectValue];
+    if (!sender && ![accounts count]) {
+        return;
+    }
     //NSLog(@"accounts %@",accounts);
     NSInteger accountIndex = -1;
     for (NSUInteger i = 0; i < [accounts count]; i++) {
