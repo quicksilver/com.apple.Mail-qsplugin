@@ -20,24 +20,30 @@
 }
 
 - (void) sendEmailTo:(NSArray *)addresses from:(NSString *)sender subject:(NSString *)subject body:(NSString *)body attachments:(NSArray *)pathArray sendNow:(BOOL)sendNow{
-    if (!sender){
-        NSArray *accounts=[[[self mailScript] executeSubroutine:@"account_list"
-													  arguments:[NSArray arrayWithObjects:subject,body,addresses,pathArray,nil]
-														  error:nil]objectValue];
-		//NSLog(@"accounts %@",accounts);
-        NSInteger accountIndex = 0;
-        for (NSUInteger i=0; i<[accounts count]; i++) {
-            if (emailsShareDomain([addresses lastObject],[[accounts objectAtIndex:i]objectAtIndex:0])){
+    NSArray *accounts = [[[self mailScript] executeSubroutine:@"account_list" arguments:[NSArray arrayWithObjects:subject, body, addresses, pathArray, nil] error:nil] objectValue];
+    if (!sender && ![accounts count]) {
+        return;
+    }
+    //NSLog(@"accounts %@",accounts);
+    NSInteger accountIndex = -1;
+    for (NSUInteger i = 0; i < [accounts count]; i++) {
+        NSString *accountAddress = [[accounts objectAtIndex:i] objectAtIndex:0];
+        for (NSString *address in addresses) {
+            if (emailsShareDomain(address, accountAddress)){
                 accountIndex = i;
-                break;
+                i = [accounts count]; // stop the outer loop
+                break;                // stop the inner loop
             }
         }
-        NSArray *account=[accounts objectAtIndex:accountIndex];
-        NSString *accountFormatted=[(NSString *)[account lastObject]length]?[NSString stringWithFormat:@"%@ <%@>",[account lastObject],[account objectAtIndex:0]]:[account objectAtIndex:0];
-        sender=accountFormatted;
-        //NSLog(@"accounts %@",accountFormatted);
-        
     }
+    if (accountIndex >= 0 || !sender) {
+        // better sender found, or default is missing
+        NSArray *account = [accounts objectAtIndex:(accountIndex >= 0) ? accountIndex : 0];
+        NSString *accountFormatted = [(NSString *)[account lastObject]length]?[NSString stringWithFormat:@"%@ <%@>", [account lastObject], [account objectAtIndex:0]]:[account objectAtIndex:0];
+        sender = accountFormatted;
+    }
+    //NSLog(@"accounts %@",accountFormatted);
+        
 	[[QSReg getClassInstance:@"QSMailMediator"] sendEmailWithScript:[self mailScript] to:(NSArray *)addresses from:(NSString *)sender subject:(NSString *)subject body:(NSString *)body attachments:(NSArray *)pathArray sendNow:(BOOL)sendNow];
 
  //   [self superSendEmailTo:(NSArray *)addresses from:(NSString *)sender subject:(NSString *)subject body:(NSString *)body attachments:(NSArray *)pathArray sendNow:(BOOL)sendNow];
@@ -90,14 +96,14 @@
 + (NSDictionary *)mailPreferences
 {
 	// locate and read Mail.app's preferences
-	NSString *prefs = [@"~/Library/Preferences/" stringByStandardizingPath];
-	NSArray *paths = [[NSFileManager defaultManager] subpathsAtPath:prefs];
-	NSDictionary *mailPrefs = nil;
-	NSPredicate *mailPrefix = [NSPredicate predicateWithFormat:@"SELF BEGINSWITH[c] 'com.apple.mail' AND NOT SELF ENDSWITH[c] '.lockfile'"];
-	NSString *prefFile = [[paths filteredArrayUsingPredicate:mailPrefix] objectAtIndex:0];
-	NSString *prefPath = [prefs stringByAppendingPathComponent:prefFile];
-	mailPrefs = [NSDictionary dictionaryWithContentsOfFile:prefPath];
-	return mailPrefs;
+    NSArray *candidates = [NSArray arrayWithObjects:@"~/Library/Mail/V2/MailData/Accounts.plist", @"~/Library/Containers/com.apple.mail/Data/Library/Preferences/com.apple.mail.plist", @"~/Library/Preferences/com.apple.mail.plist", nil];
+    for (NSString *prefs in candidates) {
+        NSDictionary *mailPrefs = [NSDictionary dictionaryWithContentsOfFile:[prefs stringByStandardizingPath]];
+        if (mailPrefs) {
+            return mailPrefs;
+        }
+    }
+    return nil;
 }
 
 - (NSDictionary *)smtpServerDetails
@@ -115,9 +121,14 @@
 			if (status == noErr) {
 				NSString *smtpPassword = [NSString stringWithCString:password encoding:[NSString defaultCStringEncoding]];
 				SecKeychainItemFreeContent(NULL, password);
+                if ([smtpPassword length] > passLen) {
+                    // trim extra characters from the buffer
+                    smtpPassword = [smtpPassword substringToIndex:passLen];
+                }
 				[details setObject:smtpPassword forKey:QSMailMediatorPassword];
 			}
 		}
+        [details autorelease];
 		return details;
 	}
 	return nil;
