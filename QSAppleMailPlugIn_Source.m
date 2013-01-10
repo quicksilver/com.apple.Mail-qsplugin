@@ -73,15 +73,6 @@
 	return object;
 }
 
-- (NSString *)detailsOfObject:(QSObject *)object{
-	if ([[object primaryType]isEqualToString:kQSAppleMailMailboxType]){
-		
-		NSString *mailbox=[object objectForType:kQSAppleMailMailboxType];
-		return [mailbox stringByDeletingLastPathComponent]; 
-	}
-	return nil;
-}
-
 - (BOOL)objectHasChildren:(QSObject *)object{
 	// when mailbox appears in third pane, you can't arrow into it
 	if ([object objectForMeta:@"loadChildren"] != nil && ![[object objectForMeta:@"loadChildren"] boolValue]) {
@@ -164,10 +155,13 @@
 	}
 
 	NSString *file, *accountName, *accountId, *mb;
+    // folders for accounts look like TYPE-username@server
+    NSString *accountRegEx = @"^.+-.+@.+$";
+    NSPredicate *regextest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", accountRegEx];
 	while (file = [accountEnum nextObject]) {
 		// skip everything that's not a mailbox directory
 		if ([[accountEnum fileAttributes] fileType] != NSFileTypeDirectory ||
-			!([file hasPrefix:@"IMAP-"] || [file hasPrefix:@"Mac-"] || [file hasPrefix:@"POP-"] || [file isEqualToString:@"Mailboxes"])) {
+			!([regextest evaluateWithObject:file] || [file isEqualToString:@"Mailboxes"])) {
 			[accountEnum skipDescendants];
 			continue;
 		}
@@ -187,20 +181,8 @@
 				continue;
 			}
 
-			// IMAP- & MoblieMe-Accounts
-			if ([[mb pathExtension] isEqualToString:@"imapmbox"]) {
-				newObject = [self makeMailboxObject:mb
-									withAccountName:accountName
-									  withAccountId:accountId
-										   withFile:file
-									   withChildren:loadChildren];
-
-				[objects addObject:newObject];
-				[mailboxEnum skipDescendants];
-			}
-
-			// POP-accounts & local mailboxes
-			if ([[mb pathExtension] isEqualToString:@"mbox"]) {
+			// IMAP, POP, iCloud, Exchange, and Local Accounts
+			if ([[mb pathExtension] hasSuffix:@"mbox"]) {
 				newObject = [self makeMailboxObject:mb
 									withAccountName:accountName
 									  withAccountId:accountId
