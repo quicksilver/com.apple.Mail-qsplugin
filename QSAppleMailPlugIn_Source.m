@@ -251,7 +251,7 @@
 		}
 		NSMetadataQuery *messageQuery = [[NSMetadataQuery alloc] init];
 		NSSet *messageContainer = [NSSet setWithObject:childPath];
-		[messageQuery resultsForSearchString:@"kMDItemKind == 'Mail Message'" inFolders:messageContainer];
+		[messageQuery resultsForSearchString:@"kMDItemContentType == 'com.apple.mail.emlx'" inFolders:messageContainer];
 		[[messageQuery results] enumerateObjectsWithOptions:NSEnumerationConcurrent usingBlock:^(NSMetadataItem *message, NSUInteger i, BOOL *stop) {
 			NSString *subject = [message valueForAttribute:(NSString *)kMDItemSubject];
 			NSString *sender = [[message valueForAttribute:(NSString *)kMDItemAuthors] lastObject];
