@@ -150,7 +150,7 @@
 	NSMutableDictionary *realAccountNames = [NSMutableDictionary dictionaryWithCapacity:[pl count]];
 	for(NSDictionary *dict in pl) {
 		if ([dict objectForKey:@"AccountPath"] != nil && [dict objectForKey:@"AccountName"] != nil) {
-			[realAccountNames setObject:[dict objectForKey:@"AccountName"] forKey:[dict objectForKey:@"AccountPath"]];
+			[realAccountNames setObject:[dict objectForKey:@"AccountName"] forKey:[[dict objectForKey:@"AccountPath"] lastPathComponent]];
 		}
 	}
 
@@ -170,7 +170,7 @@
 			accountName = @"Local Mailbox";
 			accountId = accountName;
 		} else {
-			accountName = [realAccountNames objectForKey:[NSString stringWithFormat:@"%@/%@", MAILPATH, file]];
+			accountName = [realAccountNames objectForKey:file];
 			accountId = [file substringFromIndex:[file rangeOfString:@"-"].location + 1];
 		}
 
