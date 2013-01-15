@@ -150,7 +150,7 @@
 	NSMutableDictionary *realAccountNames = [NSMutableDictionary dictionaryWithCapacity:[pl count]];
 	for(NSDictionary *dict in pl) {
 		if ([dict objectForKey:@"AccountPath"] != nil && [dict objectForKey:@"AccountName"] != nil) {
-			[realAccountNames setObject:[dict objectForKey:@"AccountName"] forKey:[dict objectForKey:@"AccountPath"]];
+			[realAccountNames setObject:[dict objectForKey:@"AccountName"] forKey:[[dict objectForKey:@"AccountPath"] lastPathComponent]];
 		}
 	}
 
@@ -170,7 +170,7 @@
 			accountName = @"Local Mailbox";
 			accountId = accountName;
 		} else {
-			accountName = [realAccountNames objectForKey:[NSString stringWithFormat:@"%@/%@", MAILPATH, file]];
+			accountName = [realAccountNames objectForKey:file];
 			accountId = [file substringFromIndex:[file rangeOfString:@"-"].location + 1];
 		}
 
@@ -251,7 +251,7 @@
 		}
 		NSMetadataQuery *messageQuery = [[NSMetadataQuery alloc] init];
 		NSSet *messageContainer = [NSSet setWithObject:childPath];
-		[messageQuery resultsForSearchString:@"kMDItemKind == 'Mail Message'" inFolders:messageContainer];
+		[messageQuery resultsForSearchString:@"kMDItemContentType == 'com.apple.mail.emlx'" inFolders:messageContainer];
 		[[messageQuery results] enumerateObjectsWithOptions:NSEnumerationConcurrent usingBlock:^(NSMetadataItem *message, NSUInteger i, BOOL *stop) {
 			NSString *subject = [message valueForAttribute:(NSString *)kMDItemSubject];
 			NSString *sender = [[message valueForAttribute:(NSString *)kMDItemAuthors] lastObject];
