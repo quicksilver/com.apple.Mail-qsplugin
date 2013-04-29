@@ -159,8 +159,8 @@
 	}
 
 	NSString *file, *accountName, *accountId, *mb;
-    // folders for accounts look like TYPE-username@server
-    NSString *accountRegEx = @"^.+-.+@.+$";
+    // folders for accounts look like TYPE-username@server or TYPE-username
+    NSString *accountRegEx = @"^.+-.+$";
     NSPredicate *regextest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", accountRegEx];
 	while (file = [accountEnum nextObject]) {
 		// skip everything that's not a mailbox directory
