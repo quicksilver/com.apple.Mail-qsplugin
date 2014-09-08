@@ -248,12 +248,12 @@
 		[objects addObject:newObject];
 	}
     @autoreleasepool {
-        [messageStore enumerateObjectsWithOptions:NSEnumerationConcurrent usingBlock:^(NSURL *mailboxChild, NSUInteger idx, BOOL *stop) {
+        for (NSURL *mailboxChild in messageStore) {
             NSNumber *isDir;
             [mailboxChild getResourceValue:&isDir forKey:NSURLIsDirectoryKey error:nil];
             if (![isDir boolValue]) {
                 // skip over plists and other metadata
-                return;
+                continue;
             }
             NSMetadataQuery *messageQuery = [[NSMetadataQuery alloc] init];
             NSSet *messageContainer = [NSSet setWithObject:[mailboxChild path]];
@@ -295,7 +295,7 @@
             }];
             [messageObject release];
             [messageQuery release];
-        }];
+        };
     }
 	return objects;
 }
