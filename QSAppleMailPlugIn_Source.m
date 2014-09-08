@@ -83,17 +83,21 @@
 	if([[object primaryType] isEqualToString:kQSAppleMailMailboxType])
 	{
 		NSFileManager *fm = [NSFileManager defaultManager];
-		NSArray *files = [fm subpathsAtPath:[NSString stringWithFormat:@"%@/%@.%@",
-												[object objectForMeta:@"accountPath"],
-												[object objectForMeta:@"mailboxName"],
-												[object objectForMeta:@"mailboxType"]]];
-		// mailbox doesn't have any files in it, it can't have messages
-		if ([files count] <= 0) {
-			return NO;
-		}
+        BOOL hasFiles = NO;
+        NSDirectoryEnumerator *enumerator = [fm enumeratorAtPath:[NSString stringWithFormat:@"%@/%@.%@",
+                                                         [object objectForMeta:@"accountPath"],
+                                                         [object objectForMeta:@"mailboxName"],
+                                                         [object objectForMeta:@"mailboxType"]]];
+        NSString *file;
+        while ((file = [enumerator nextObject])) {
+            hasFiles = YES;
+            break;
+        }
+        
+        // If the directory has any files, we can (perhaps incorrectly) assume that there are at least some .emlx (message) files
+        return hasFiles;
 		
-		// seems like there are files, so set the right-arrow indicator
-		return YES;
+
 	}
 	
 	// messages always have children: body text and from-address
@@ -223,55 +227,58 @@
 	NSString *accountID = [object objectForMeta:@"accountId"];
 	NSString *accountPath = [object objectForMeta:@"accountPath"];
 	NSString *mailbox = [object objectForMeta:@"mailbox"];
-	NSString *subPath, *childPath;
 	NSMutableArray *objects = [NSMutableArray arrayWithCapacity:0];
 	QSObject *newObject;
 	NSFileManager *manager = [NSFileManager defaultManager];
-	// predicate to find sub-mailboxes
-	NSPredicate *mbox = [NSPredicate predicateWithFormat:@"SELF ENDSWITH[cd] '.mbox'"];
-	// predicate to find messages
-	NSPredicate *messages = [NSPredicate predicateWithFormat:@"NOT SELF ENDSWITH[cd] '.mbox'"];
-	BOOL isDir;
 	NSString *mailboxPath = [accountPath stringByAppendingPathComponent:mailbox];
-	NSArray *subs = [manager contentsOfDirectoryAtPath:mailboxPath error:nil];
-	NSArray *subMailboxes = [subs filteredArrayUsingPredicate:mbox];
-	NSArray *messageStore = [subs filteredArrayUsingPredicate:messages];
-	for (NSString *subMailbox in subMailboxes) {
+	NSArray *subs = [manager contentsOfDirectoryAtURL:[NSURL fileURLWithPath:mailboxPath] includingPropertiesForKeys:@[NSURLIsDirectoryKey] options:0 error:0];
+	NSArray *subMailboxes = [subs filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(NSURL *evaluatedObject, NSDictionary *bindings) {
+        // predicate to find sub-mailboxes
+        return [[evaluatedObject pathExtension] isEqualToString:@"mbox"];
+    }]];
+	NSArray *messageStore = [subs filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(NSURL* evaluatedObject, NSDictionary *bindings) {
+        // predicate to find messages
+        return ![[evaluatedObject pathExtension] isEqualToString:@"mbox"];
+    }]];
+    NSString *subpath = [[accountPath lastPathComponent] stringByAppendingPathComponent:mailbox];
+
+	for (NSURL *subMailbox in subMailboxes) {
 		// create QSObject for sub-folder
-		subPath = [[[accountPath pathComponents] lastObject] stringByAppendingPathComponent:mailbox];
-		newObject = [self makeMailboxObject:subMailbox withAccountName:[object details] withAccountId:accountID withFile:subPath withChildren:YES];
+		newObject = [self makeMailboxObject:[subMailbox lastPathComponent] withAccountName:[object details] withAccountId:accountID withFile:subpath withChildren:YES];
 		[objects addObject:newObject];
 	}
-	for (NSString *mailboxChild in messageStore) {
-		childPath = [mailboxPath stringByAppendingPathComponent:mailboxChild];
-		[manager fileExistsAtPath:childPath isDirectory:&isDir];
-		if (!isDir) {
-			// skip over plists and other metadata
-			continue;
-		}
-		NSMetadataQuery *messageQuery = [[NSMetadataQuery alloc] init];
-		NSSet *messageContainer = [NSSet setWithObject:childPath];
-		[messageQuery resultsForSearchString:@"kMDItemContentType == 'com.apple.mail.emlx'" inFolders:messageContainer];
-		[[messageQuery results] enumerateObjectsWithOptions:NSEnumerationConcurrent usingBlock:^(NSMetadataItem *message, NSUInteger i, BOOL *stop) {
-			NSString *subject = [message valueForAttribute:(NSString *)kMDItemSubject];
-			NSString *sender = [[message valueForAttribute:(NSString *)kMDItemAuthors] lastObject];
-			NSString *mailPath = [message valueForAttribute:@"kMDItemPath"];
-			QSObject *messageObject = [QSObject objectWithName:subject];
-			[messageObject setDetails:sender];
-			[messageObject setParentID:[object identifier]];
-			[messageObject setIdentifier:[NSString stringWithFormat:@"message:%@", [message valueForAttribute:(NSString *)kMDItemFSName]]];
-			[messageObject setObject:accountID forMeta:@"accountId"];
-			[messageObject setObject:[object details] forMeta:@"accountName"];
-			[messageObject setObject:[message valueForAttribute:(NSString *)kMDItemFSName] forMeta:@"message_id"];
-			[messageObject setObject:mailboxName forMeta:@"mailboxName"];
-			[messageObject setObject:accountPath forMeta:@"accountPath"];
-			[messageObject setObject:subject forType:kQSAppleMailMessageType];
-			[messageObject setObject:mailPath forType:QSFilePathType];
-			[messageObject setPrimaryType:kQSAppleMailMessageType];
-			[objects addObject:messageObject];
-		}];
-		[messageQuery release];
-	}
+    @autoreleasepool {
+        [messageStore enumerateObjectsWithOptions:NSEnumerationConcurrent usingBlock:^(NSURL *mailboxChild, NSUInteger idx, BOOL *stop) {
+            NSNumber *isDir;
+            [mailboxChild getResourceValue:&isDir forKey:NSURLIsDirectoryKey error:nil];
+            if (![isDir boolValue]) {
+                // skip over plists and other metadata
+                return;
+            }
+            NSMetadataQuery *messageQuery = [[NSMetadataQuery alloc] init];
+            NSSet *messageContainer = [NSSet setWithObject:[mailboxChild path]];
+            [messageQuery resultsForSearchString:@"kMDItemFSName ENDSWITH '.emlx' AND kMDItemContentType == 'com.apple.mail.emlx'" inFolders:messageContainer];
+            [[messageQuery results] enumerateObjectsWithOptions:NSEnumerationConcurrent usingBlock:^(NSMetadataItem *message, NSUInteger i, BOOL *stop) {
+                NSString *subject = [message valueForAttribute:(NSString *)kMDItemSubject];
+                NSString *sender = [[message valueForAttribute:(NSString *)kMDItemAuthors] lastObject];
+                NSString *mailPath = [message valueForAttribute:@"kMDItemPath"];
+                QSObject *messageObject = [QSObject objectWithName:subject];
+                [messageObject setDetails:sender];
+                [messageObject setParentID:[object identifier]];
+                [messageObject setIdentifier:[NSString stringWithFormat:@"message:%@", [message valueForAttribute:(NSString *)kMDItemFSName]]];
+                [messageObject setObject:accountID forMeta:@"accountId"];
+                [messageObject setObject:[object details] forMeta:@"accountName"];
+                [messageObject setObject:[message valueForAttribute:(NSString *)kMDItemFSName] forMeta:@"message_id"];
+                [messageObject setObject:mailboxName forMeta:@"mailboxName"];
+                [messageObject setObject:accountPath forMeta:@"accountPath"];
+                [messageObject setObject:subject forType:kQSAppleMailMessageType];
+                [messageObject setObject:mailPath forType:QSFilePathType];
+                [messageObject setPrimaryType:kQSAppleMailMessageType];
+                [objects addObject:messageObject];
+            }];
+            [messageQuery release];
+        }];
+    }
 	return objects;
 }
 

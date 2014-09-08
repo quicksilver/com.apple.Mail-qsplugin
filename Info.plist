@@ -19,7 +19,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>3.0.2</string>
 	<key>CFBundleVersion</key>
-	<string>11F</string>
+	<string>131</string>
 	<key>QSActionsDisabled</key>
 	<dict>
 		<key>QSAppleMailMailboxOpenAction</key>
@@ -251,7 +251,7 @@ Note: It has only been tested with IMAP accounts. --&gt;</string>
 			</dict>
 		</array>
 		<key>version</key>
-		<string>3926</string>
+		<string>4001</string>
 	</dict>
 	<key>QSResourceAdditions</key>
 	<dict>
