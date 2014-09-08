@@ -19,7 +19,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>3.1.0</string>
 	<key>CFBundleVersion</key>
-	<string>131</string>
+	<string>147</string>
 	<key>QSActionsDisabled</key>
 	<dict>
 		<key>QSAppleMailMailboxOpenAction</key>
@@ -101,7 +101,7 @@
 		<key>extendedDescription</key>
 		<string>&lt;h2&gt;Apple Mail Plugin&lt;/h2&gt;
 &lt;p&gt;This plugin lets you browse your mailboxes and messages contained in Apple Mail.&lt;/p&gt;
-&lt;p&gt;Just call up Mail.app in the first pane and hit → or /. It will reveal all mailboxes and folders for each account. Arrowing into a mailbox reveals all messages in that folder. The selected message can be viewed with Quick Look or &quot;opened&quot; to reveal it in Mail.&lt;/p&gt;
+&lt;p&gt;Just call up Mail.app in the first pane and hit → or /. It will reveal all mailboxes and folders for each account. Arrowing into a mailbox reveals all messages in that folder. The selected message can be viewed with Quick Look or "opened" to reveal it in Mail.&lt;/p&gt;
 &lt;p&gt;This plugin also allows actions for composing messages or sending messages directly (via the E-mail Support plugin) to funciton based on settings in Apple Mail.&lt;/p&gt;
 &lt;!-- ### Actions ###
 

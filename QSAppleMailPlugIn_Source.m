@@ -257,25 +257,43 @@
             }
             NSMetadataQuery *messageQuery = [[NSMetadataQuery alloc] init];
             NSSet *messageContainer = [NSSet setWithObject:[mailboxChild path]];
-            [messageQuery resultsForSearchString:@"kMDItemFSName ENDSWITH '.emlx' AND kMDItemContentType == 'com.apple.mail.emlx'" inFolders:messageContainer];
+
+            [messageQuery resultsForSearchString:@"kMDItemContentType == 'com.apple.mail.emlx'" inFolders:messageContainer];
+            QSObject *messageObject = [[QSObject alloc] init];
+            [messageObject setPrimaryType:kQSAppleMailMessageType];
+            [messageObject setObject:accountPath forMeta:@"accountPath"];
+            [messageObject setObject:mailboxName forMeta:@"mailboxName"];
+            [messageObject setObject:accountID forMeta:@"accountId"];
+            [messageObject setObject:[object details] forMeta:@"accountName"];
+            [messageObject setParentID:[object identifier]];
+            
             [[messageQuery results] enumerateObjectsWithOptions:NSEnumerationConcurrent usingBlock:^(NSMetadataItem *message, NSUInteger i, BOOL *stop) {
-                NSString *subject = [message valueForAttribute:(NSString *)kMDItemSubject];
-                NSString *sender = [[message valueForAttribute:(NSString *)kMDItemAuthors] lastObject];
-                NSString *mailPath = [message valueForAttribute:@"kMDItemPath"];
-                QSObject *messageObject = [QSObject objectWithName:subject];
-                [messageObject setDetails:sender];
-                [messageObject setParentID:[object identifier]];
-                [messageObject setIdentifier:[NSString stringWithFormat:@"message:%@", [message valueForAttribute:(NSString *)kMDItemFSName]]];
-                [messageObject setObject:accountID forMeta:@"accountId"];
-                [messageObject setObject:[object details] forMeta:@"accountName"];
-                [messageObject setObject:[message valueForAttribute:(NSString *)kMDItemFSName] forMeta:@"message_id"];
-                [messageObject setObject:mailboxName forMeta:@"mailboxName"];
-                [messageObject setObject:accountPath forMeta:@"accountPath"];
-                [messageObject setObject:subject forType:kQSAppleMailMessageType];
-                [messageObject setObject:mailPath forType:QSFilePathType];
-                [messageObject setPrimaryType:kQSAppleMailMessageType];
-                [objects addObject:messageObject];
+                /* Various optimisations in this routine
+                 
+                 * Get all MDMetadataItem attributes at once (50%)
+                 * Create a QSObject with the placeholder info outside of this loop (2%)
+                 * Bypass -[QSObject setName:]. This is a new object so there is no needt to check against the label etc. (0.5%)
+                 * Set the kQSAppleMailMessageType and filetype in data directly - (avoids calls to @synchronized and QSUTIForAnyType()) (7%)
+                 
+                 */
+                
+                NSDictionary *attrs = [message valuesForAttributes:@[(NSString *)kMDItemPath, (NSString *)kMDItemSubject, (NSString *)kMDItemAuthors, (NSString *)kMDItemFSName]];
+                NSString *subject = attrs[(NSString *)kMDItemSubject];
+                if ([subject length] > 255) subject = [subject substringToIndex:255];
+                
+                NSString *fsName = attrs[(NSString *)kMDItemFSName];
+                
+                QSObject *messageObjectNew = [messageObject copy];
+                [messageObjectNew setObject:subject forMeta:kQSObjectPrimaryName];
+                [messageObjectNew setDetails:[attrs[(NSString *)kMDItemAuthors] lastObject]];
+                [messageObjectNew setIdentifier:[NSString stringWithFormat:@"message:%@", fsName]];
+                [messageObjectNew setObject:fsName forMeta:@"message_id"];
+                [[messageObjectNew dataDictionary] setObject:subject forKey:kQSAppleMailMessageType];
+                [[messageObjectNew dataDictionary] setObject:attrs[(NSString *)kMDItemPath] forKey:QSFilePathType];
+                [objects addObject:messageObjectNew];
+                [messageObjectNew release];
             }];
+            [messageObject release];
             [messageQuery release];
         }];
     }
