@@ -279,17 +279,29 @@
                 
                 NSDictionary *attrs = [message valuesForAttributes:@[(NSString *)kMDItemPath, (NSString *)kMDItemSubject, (NSString *)kMDItemAuthors, (NSString *)kMDItemFSName]];
                 NSString *subject = attrs[(NSString *)kMDItemSubject];
-                if ([subject length] > 255) subject = [subject substringToIndex:255];
+
+                if (!subject) {
+                    // Some corrupt messages might not have a subject. If so, they are useless
+                    return;
+                }
                 
+                if ([subject length] > 255) {
+                    subject = [subject substringToIndex:255];
+                }
                 NSString *fsName = attrs[(NSString *)kMDItemFSName];
+
                 
                 QSObject *messageObjectNew = [messageObject copy];
                 [messageObjectNew setObject:subject forMeta:kQSObjectPrimaryName];
                 [messageObjectNew setDetails:[attrs[(NSString *)kMDItemAuthors] lastObject]];
                 [messageObjectNew setIdentifier:[NSString stringWithFormat:@"message:%@", fsName]];
                 [messageObjectNew setObject:fsName forMeta:@"message_id"];
-                [[messageObjectNew dataDictionary] setObject:subject forKey:kQSAppleMailMessageType];
-                [[messageObjectNew dataDictionary] setObject:attrs[(NSString *)kMDItemPath] forKey:QSFilePathType];
+                if (subject) {
+                    [[messageObjectNew dataDictionary] setObject:subject forKey:kQSAppleMailMessageType];
+                }
+                if (attrs[(NSString *)kMDItemPath]) {
+                    [[messageObjectNew dataDictionary] setObject:attrs[(NSString *)kMDItemPath] forKey:QSFilePathType];
+                }
                 [objects addObject:messageObjectNew];
                 [messageObjectNew release];
             }];
