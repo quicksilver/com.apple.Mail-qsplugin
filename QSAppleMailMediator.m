@@ -138,9 +138,17 @@
 {
 	if ([actionID isEqualToString:@"QSEmailItemAction"] || [actionID isEqualToString:@"QSEmailItemReverseAction"]) {
 		// actions that send immediately
-		return [QSResourceManager imageNamed:@"MailMailbox-Sent"];
+        static NSImage *MailMailboxSet = nil;
+        if (!MailMailboxSet) {
+            MailMailboxSet = [[QSResourceManager imageNamed:@"MailMailbox-Set"] retain];
+        }
+        return MailMailboxSet;
 	}
-	return [QSResourceManager imageNamed:@"com.apple.Mail"];
+    static NSImage *mail = nil;
+    if (!mail) {
+        mail = [[QSResourceManager imageNamed:@"com.apple.Mail"] retain];
+    }
+    return mail;
 }
 
 
