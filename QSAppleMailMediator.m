@@ -13,11 +13,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [mailScript release];
-    [super dealloc];
-}
 
 - (void) sendEmailTo:(NSArray *)addresses from:(NSString *)sender subject:(NSString *)subject body:(NSString *)body attachments:(NSArray *)pathArray sendNow:(BOOL)sendNow{
     NSArray *accounts = [[[self mailScript] executeSubroutine:@"account_list" arguments:[NSArray arrayWithObjects:subject, body, addresses, pathArray, nil] error:nil] objectValue];
@@ -89,8 +84,7 @@
 }
 
 - (void)setMailScript:(NSAppleScript *)newMailScript {
-    [mailScript release];
-    mailScript = [newMailScript retain];
+    mailScript = newMailScript;
 }
 
 + (NSDictionary *)mailPreferences
@@ -110,14 +104,32 @@
 {
 	NSArray *smtpList = [[QSAppleMailMediator mailPreferences] objectForKey:@"DeliveryAccounts"];
 	if ([smtpList count]) {
-		NSMutableDictionary *details = [[smtpList objectAtIndex:0] mutableCopy];
+        
+        // Try and use the account that corresponds to the custom from address in the Email Support prefs
+        
+        NSString *customFromAddress = [[[QSReg QSMailMediator] defaultEmailAddress] displayName];
+        // sometimes the username is the email address but without the domain (following the @ symbol)
+        NSString *customFromAddressNoDomain = [customFromAddress componentsSeparatedByString:@"@"][0];
+        
+        NSUInteger i = [smtpList indexOfObjectPassingTest:^BOOL(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
+            NSString *username = obj[QSMailMediatorUsername];
+            return [username isEqualToString:customFromAddress] || [username isEqualToString:customFromAddressNoDomain];
+        }];
+        NSMutableDictionary *details = nil;
+        if (i != NSNotFound) {
+            details = [smtpList objectAtIndex:i];
+        } else {
+            details = [[smtpList objectAtIndex:0] mutableCopy];
+        }
 		[details setObject:[details objectForKey:@"SSLEnabled"] forKey:QSMailMediatorTLS];
 		if ([[details objectForKey:QSMailMediatorAuthenticate] isEqualToString:@"YES"]) {
 			NSString *server = [details objectForKey:QSMailMediatorServer];
 			NSString *user = [details objectForKey:QSMailMediatorUsername];
 			UInt32 passLen = 0;
 			void *password = nil;
-			OSStatus status = SecKeychainFindInternetPassword(NULL, (UInt32)[server length], [server UTF8String], 0, NULL, (UInt32)[user length], [user UTF8String], 0, NULL, 0, kSecProtocolTypeSMTP, kSecAuthenticationTypeDefault, &passLen, &password, NULL);
+            
+			OSStatus status = SecKeychainFindInternetPassword(NULL, (UInt32)[server length], [server UTF8String], 0, NULL, (UInt32)[user length], [user UTF8String], 0, NULL, 0, kSecProtocolTypeSMTP, kSecAuthenticationTypeAny, &passLen, &password, NULL);
+            
 			if (status == noErr) {
 				NSString *smtpPassword = [NSString stringWithCString:password encoding:[NSString defaultCStringEncoding]];
 				SecKeychainItemFreeContent(NULL, password);
@@ -126,9 +138,11 @@
                     smtpPassword = [smtpPassword substringToIndex:passLen];
                 }
 				[details setObject:smtpPassword forKey:QSMailMediatorPassword];
-			}
+			} else {
+                NSString *errorString = (NSString *)CFBridgingRelease(SecCopyErrorMessageString(status, NULL));
+                NSLog(@"Error getting password for user %@. Error %@ (Code: %d)", user, errorString, (int)status);
+            }
 		}
-        [details autorelease];
 		return details;
 	}
 	return nil;
@@ -140,13 +154,13 @@
 		// actions that send immediately
         static NSImage *MailMailboxSet = nil;
         if (!MailMailboxSet) {
-            MailMailboxSet = [[QSResourceManager imageNamed:@"MailMailbox-Set"] retain];
+            MailMailboxSet = [QSResourceManager imageNamed:@"MailMailbox-Set"];
         }
         return MailMailboxSet;
 	}
     static NSImage *mail = nil;
     if (!mail) {
-        mail = [[QSResourceManager imageNamed:@"com.apple.Mail"] retain];
+        mail = [QSResourceManager imageNamed:@"com.apple.Mail"];
     }
     return mail;
 }

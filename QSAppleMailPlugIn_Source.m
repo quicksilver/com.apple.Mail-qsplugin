@@ -60,7 +60,7 @@
 }
 
 
-- (QSObject *)initFileObject:(QSObject *)object ofType:(NSString *)type{
+- (QSObject *)fileObjectFromObject:(QSObject *)object ofType:(NSString *)type {
 	NSString *filePath=[object singleFilePath];
 	NSString *iden=[[filePath lastPathComponent]stringByDeletingPathExtension];
 	NSString *mailbox=[[[filePath stringByDeletingLastPathComponent]stringByDeletingLastPathComponent]lastPathComponent];
@@ -303,10 +303,7 @@
                     [[messageObjectNew dataDictionary] setObject:attrs[(NSString *)kMDItemPath] forKey:QSFilePathType];
                 }
                 [objects addObject:messageObjectNew];
-                [messageObjectNew release];
             }];
-            [messageObject release];
-            [messageQuery release];
         };
     }
 	return objects;

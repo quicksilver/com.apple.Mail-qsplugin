@@ -19,16 +19,11 @@
 {
     self = [super init];
     if (self) {
-        Mail = [[SBApplication applicationWithBundleIdentifier:@"com.apple.mail"] retain];
+        Mail = [SBApplication applicationWithBundleIdentifier:@"com.apple.mail"];
     }
     return self;
 }
 
-- (void)dealloc
-{
-    [Mail release];
-    [super dealloc];
-}
 
 - (NSArray *)validIndirectObjectsForAction:(NSString *)action directObject:(QSObject *)dObject
 {
