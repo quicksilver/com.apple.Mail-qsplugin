@@ -17,9 +17,9 @@
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>3.1.0</string>
+	<string>3.2.0</string>
 	<key>CFBundleVersion</key>
-	<string>154</string>
+	<string>197</string>
 	<key>QSActionsDisabled</key>
 	<dict>
 		<key>QSAppleMailMailboxOpenAction</key>
