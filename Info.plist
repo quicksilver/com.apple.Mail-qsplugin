@@ -19,8 +19,8 @@
 	<key>CFBundleShortVersionString</key>
 	<string>3.1.0</string>
 	<key>CFBundleVersion</key>
-	<string>154</string>
-	<key>QSActionsDisabled</key>
+	<string>1B3</string>
+	<key>QSActions</key>
 	<dict>
 		<key>QSAppleMailMailboxOpenAction</key>
 		<dict>
@@ -37,6 +37,24 @@
 			<key>name</key>
 			<string>Open Mailbox</string>
 		</dict>
+		<key>QSAppleMailMessageOpenAction</key>
+		<dict>
+			<key>actionClass</key>
+			<string>QSAppleMailPlugIn_Action</string>
+			<key>actionSelector</key>
+			<string>revealMessage:</string>
+			<key>directTypes</key>
+			<array>
+				<string>qs.mail.message</string>
+			</array>
+			<key>icon</key>
+			<string>com.apple.mail</string>
+			<key>name</key>
+			<string>Open Message</string>
+		</dict>
+	</dict>
+	<key>QSActionsDisabled</key>
+	<dict>
 		<key>QSAppleMailMessageDeleteAction</key>
 		<dict>
 			<key>actionClass</key>
@@ -71,21 +89,6 @@
 			<key>name</key>
 			<string>Move to Mailbox...</string>
 		</dict>
-		<key>QSAppleMailMessageOpenAction</key>
-		<dict>
-			<key>actionClass</key>
-			<string>QSAppleMailPlugIn_Action</string>
-			<key>actionSelector</key>
-			<string>revealMessage:</string>
-			<key>directTypes</key>
-			<array>
-				<string>qs.mail.message</string>
-			</array>
-			<key>icon</key>
-			<string>com.apple.mail</string>
-			<key>name</key>
-			<string>Open Message</string>
-		</dict>
 	</dict>
 	<key>QSPlugIn</key>
 	<dict>
@@ -102,16 +105,21 @@
 		<string>&lt;h2&gt;Apple Mail Plugin&lt;/h2&gt;
 &lt;p&gt;This plugin lets you browse your mailboxes and messages contained in Apple Mail.&lt;/p&gt;
 &lt;p&gt;Just call up Mail.app in the first pane and hit → or /. It will reveal all mailboxes and folders for each account. Arrowing into a mailbox reveals all messages in that folder. The selected message can be viewed with Quick Look or "opened" to reveal it in Mail.&lt;/p&gt;
-&lt;p&gt;This plugin also allows actions for composing messages or sending messages directly (via the E-mail Support plugin) to funciton based on settings in Apple Mail.&lt;/p&gt;
-&lt;!-- ### Actions ###
-
-Get New Mail - Recieves new mails for all accounts.
-Open New Messages - Opens all unread messages.
-Open Mailbox - When a mailbox is selected in the first pane, this actions opens it in Mail.app.
-Open Message - When a message is selected in the first pane, this actions opens it in its own window in Mail.app
+&lt;p&gt;This plugin also allows actions for composing messages or sending messages directly (via the E-mail Support plugin) to function based on settings in Apple Mail.&lt;/p&gt;
+&lt;h3&gt;Actions&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Open Mailbox - When a mailbox is selected in the first pane, this actions opens it in Mail.app.&lt;/li&gt;
+&lt;li&gt;Open Message - When a message is selected in the first pane, this actions opens it in its own window in Mail.app&lt;/li&gt;
+&lt;li&gt;Get New Mail - Recieves new mails for all accounts.&lt;/li&gt;
+&lt;li&gt;Open New Messages - Opens all unread messages.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!--
 Move to Mailbox... - When a message is selected in the first pane, this action moves the message from the current mailbox into another one. The new mailbox can be selected in the third pane.
 Delete Message - Deletes the selected message from a mailbox.
-Note: It has only been tested with IMAP accounts. --&gt;</string>
+Note: It has only been tested with IMAP accounts. --&gt;
+
+&lt;h4&gt;NOTE: For Gmail Users&lt;/h4&gt;
+&lt;p&gt;Apple Mail only partially supports Gmail folders. That means trying to  browse Gmail folders using → will only work for the most basic folders (Inbox, Bin etc.) and won't work for any custom folders you have created.&lt;/p&gt;</string>
 		<key>icon</key>
 		<string>com.apple.Mail</string>
 		<key>relatedBundles</key>

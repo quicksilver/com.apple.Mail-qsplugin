@@ -13,7 +13,6 @@
 		2EBE6C0F1350F9B400C71301 /* Sent.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2EBE6C0E1350F9B400C71301 /* Sent.icns */; };
 		8D1AC9700486D14A00FE50C9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD92D38A0106425D02CA0E72 /* Cocoa.framework */; };
 		D409AC2C15656B4C00D4D364 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D409AC2915656B2800D4D364 /* ScriptingBridge.framework */; };
-		D409AC2D15656B6F00D4D364 /* Mail.app in Sources */ = {isa = PBXBuildFile; fileRef = D453F01B15656A39008B9911 /* Mail.app */; };
 		D409AC3415656DF500D4D364 /* QSUnreadMailSource.m in Sources */ = {isa = PBXBuildFile; fileRef = D409AC3315656DF500D4D364 /* QSUnreadMailSource.m */; };
 		D4A597C115DAEC5B00825FFC /* Mail.icns in Resources */ = {isa = PBXBuildFile; fileRef = D4A597BF15DAEC5B00825FFC /* Mail.icns */; };
 		D4A597C215DAEC5B00825FFC /* mailbox.icns in Resources */ = {isa = PBXBuildFile; fileRef = D4A597C015DAEC5B00825FFC /* mailbox.icns */; };
@@ -29,6 +28,8 @@
 			compilerSpec = com.apple.compilers.proxy.script;
 			filePatterns = "*.app";
 			fileType = pattern.proxy;
+			inputFiles = (
+			);
 			isEditable = 1;
 			outputFiles = (
 				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).h",
@@ -47,13 +48,12 @@
 		2EBE6C051350F99C00C71301 /* Drafts.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Drafts.icns; sourceTree = "<group>"; };
 		2EBE6C061350F99C00C71301 /* Junk.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Junk.icns; sourceTree = "<group>"; };
 		2EBE6C0E1350F9B400C71301 /* Sent.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Sent.icns; sourceTree = "<group>"; };
-		7F3D846B07D76BAE00A1B6A7 /* QSMailMediator.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = QSMailMediator.h; path = ../elements.support.mail/QSMailMediator.h; sourceTree = SOURCE_ROOT; };
 		8D1AC9730486D14A00FE50C9 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D1AC9740486D14A00FE50C9 /* Apple Mail Plugin.qsplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Apple Mail Plugin.qsplugin"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CDE0F8712F2E2EEC007AED48 /* Mail.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; name = Mail.app; path = /System/Applications/Mail.app; sourceTree = "<absolute>"; };
 		D409AC2915656B2800D4D364 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
 		D409AC3215656DF500D4D364 /* QSUnreadMailSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QSUnreadMailSource.h; sourceTree = "<group>"; };
 		D409AC3315656DF500D4D364 /* QSUnreadMailSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QSUnreadMailSource.m; sourceTree = "<group>"; };
-		D453F01B15656A39008B9911 /* Mail.app */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Mail.app; path = /Applications/Mail.app; sourceTree = "<absolute>"; };
 		D4A597BF15DAEC5B00825FFC /* Mail.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Mail.icns; sourceTree = "<group>"; };
 		D4A597C015DAEC5B00825FFC /* mailbox.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = mailbox.icns; sourceTree = "<group>"; };
 		DD92D38A0106425D02CA0E72 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
@@ -96,7 +96,7 @@
 			children = (
 				D4A597BF15DAEC5B00825FFC /* Mail.icns */,
 				D4A597C015DAEC5B00825FFC /* mailbox.icns */,
-				D453F01B15656A39008B9911 /* Mail.app */,
+				CDE0F8712F2E2EEC007AED48 /* Mail.app */,
 				E1C9DC2307099B27001BB625 /* Scripts */,
 				2EBE6C051350F99C00C71301 /* Drafts.icns */,
 				2EBE6C061350F99C00C71301 /* Junk.icns */,
@@ -127,7 +127,6 @@
 		32DBCF9E0370C38000C91783 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				7F3D846B07D76BAE00A1B6A7 /* QSMailMediator.h */,
 				E1C9DC1707099B11001BB625 /* QSAppleMailMediator.h */,
 				E1C9DC1807099B11001BB625 /* QSAppleMailMediator.m */,
 				E1C9DCEC0709A6FB001BB625 /* QSAppleMailPlugIn_Action.h */,
@@ -183,6 +182,11 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0510;
+				TargetAttributes = {
+					8D1AC9600486D14A00FE50C9 = {
+						ProvisioningStyle = Manual;
+					};
+				};
 			};
 			buildConfigurationList = 7F07AF2A085E432A00E2AFC4 /* Build configuration list for PBXProject "AppleMailElement" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -233,7 +237,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"$QS_BUILD_ROOT/Tools/bltrversion\"";
+			shellScript = "\"$QS_BUILD_ROOT/Tools/bltrversion\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -242,7 +246,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D409AC2D15656B6F00D4D364 /* Mail.app in Sources */,
 				E1C9DC1A07099B11001BB625 /* QSAppleMailMediator.m in Sources */,
 				E1C9DC2007099B19001BB625 /* QSAppleMailPlugIn_Source.m in Sources */,
 				E1C9DCEF0709A6FB001BB625 /* QSAppleMailPlugIn_Action.m in Sources */,
@@ -257,9 +260,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 14A8D20C10CE5956003857E3 /* QSPlugIn.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				HEADER_SEARCH_PATHS = (
-					../Support/MailCore/Source,
-					"../Support/MailCore/libetpan/build-mac/include",
+					"../elements.support.mail-qsplugin/",
+					"../elements.support.mail-qsplugin/MailCore-prebuilt/include",
 				);
 				PRODUCT_NAME = "Apple Mail Plugin";
 			};
@@ -284,9 +288,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 14A8D20C10CE5956003857E3 /* QSPlugIn.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				HEADER_SEARCH_PATHS = (
-					../Support/MailCore/Source,
-					"../Support/MailCore/libetpan/build-mac/include",
+					"../elements.support.mail-qsplugin/",
+					"../elements.support.mail-qsplugin/MailCore-prebuilt/include",
 				);
 				PRODUCT_NAME = "Apple Mail Plugin";
 			};

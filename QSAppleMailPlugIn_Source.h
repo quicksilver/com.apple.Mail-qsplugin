@@ -15,6 +15,6 @@
 {
 }
 - (NSArray *)allMailboxes;
-- (NSArray *)allMailboxes:(BOOL)loadChildren;
+- (NSArray *)allMailboxes:(BOOL)allowLoadChildren recursive:(BOOL)recursive;
 @end
 

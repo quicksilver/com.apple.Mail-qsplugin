@@ -14,15 +14,9 @@
 {
 	self = [super init];
 	if (self) {
-		Mail = [[SBApplication applicationWithBundleIdentifier:@"com.apple.mail"] retain];
+		Mail = [SBApplication applicationWithBundleIdentifier:@"com.apple.mail"];
 	}
 	return self;
-}
-
-- (void)dealloc
-{
-	[Mail release];
-	[super dealloc];
 }
 
 - (BOOL)indexIsValidFromDate:(NSDate *)indexDate forEntry:(NSDictionary *)theEntry
@@ -85,7 +79,6 @@
 		}
 		[qsmessages addObject:child];
 	}
-	[query release];
 	[object setChildren:qsmessages];
 	return YES;
 }
