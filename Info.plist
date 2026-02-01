@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>3.1.0</string>
+	<string>3.2.0</string>
 	<key>CFBundleVersion</key>
 	<string>1B3</string>
 	<key>QSActions</key>
@@ -104,7 +104,7 @@
 		<key>extendedDescription</key>
 		<string>&lt;h2&gt;Apple Mail Plugin&lt;/h2&gt;
 &lt;p&gt;This plugin lets you browse your mailboxes and messages contained in Apple Mail.&lt;/p&gt;
-&lt;p&gt;Just call up Mail.app in the first pane and hit → or /. It will reveal all mailboxes and folders for each account. Arrowing into a mailbox reveals all messages in that folder. The selected message can be viewed with Quick Look or "opened" to reveal it in Mail.&lt;/p&gt;
+&lt;p&gt;Just call up Mail.app in the first pane and hit → or /. It will reveal all mailboxes and folders for each account. Arrowing into a mailbox reveals all messages in that folder. The selected message can be viewed with Quick Look or &quot;opened&quot; to reveal it in Mail.&lt;/p&gt;
 &lt;p&gt;This plugin also allows actions for composing messages or sending messages directly (via the E-mail Support plugin) to function based on settings in Apple Mail.&lt;/p&gt;
 &lt;h3&gt;Actions&lt;/h3&gt;
 &lt;ul&gt;
@@ -119,7 +119,7 @@ Delete Message - Deletes the selected message from a mailbox.
 Note: It has only been tested with IMAP accounts. --&gt;
 
 &lt;h4&gt;NOTE: For Gmail Users&lt;/h4&gt;
-&lt;p&gt;Apple Mail only partially supports Gmail folders. That means trying to  browse Gmail folders using → will only work for the most basic folders (Inbox, Bin etc.) and won't work for any custom folders you have created.&lt;/p&gt;</string>
+&lt;p&gt;Apple Mail only partially supports Gmail folders. That means trying to  browse Gmail folders using → will only work for the most basic folders (Inbox, Bin etc.) and won&apos;t work for any custom folders you have created.&lt;/p&gt;</string>
 		<key>icon</key>
 		<string>com.apple.Mail</string>
 		<key>relatedBundles</key>
@@ -260,6 +260,8 @@ Note: It has only been tested with IMAP accounts. --&gt;
 		</array>
 		<key>version</key>
 		<string>4001</string>
+		<key>osRequired</key>
+		<string>11.0</string>
 	</dict>
 	<key>QSResourceAdditions</key>
 	<dict>
