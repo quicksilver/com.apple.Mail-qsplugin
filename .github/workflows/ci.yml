@@ -8,6 +8,10 @@ jobs:
   build:
     runs-on: macos-latest
     steps:
+      - uses: actions/checkout@v3
+      - name: Checkout mail-qsplugin dependency
+        run: git clone https://github.com/quicksilver/elements.support.mail-qsplugin.git ../elements.support.mail-qsplugin
+      
       - uses: quicksilver/qs-plugin-action@v1
         with:
           MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
